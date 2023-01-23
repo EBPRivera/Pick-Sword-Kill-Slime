@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     public float movementSpeed = 1;
+    public float collisionOffset = 0.02f;
     public ContactFilter2D contactFilter;
 
     Vector2 inputDirection;
@@ -13,8 +14,7 @@ public class PlayerController : MonoBehaviour
     Animator animator;
     SpriteRenderer spriteRenderer;
     List<RaycastHit2D> collisionList = new List<RaycastHit2D>();
-    float horizontalDirection = 0;
-    float verticalDirection = 0;
+    Vector2 facingDirection = new Vector2(0, 0);
 
     // Start is called before the first frame update
     void Start()
@@ -28,36 +28,52 @@ public class PlayerController : MonoBehaviour
     {
         // Update player's movement
         if (inputDirection != Vector2.zero) {
-            // Check player collision at given direction
-            int collisionCount = rigidBody.Cast(
-                inputDirection, contactFilter, collisionList, movementSpeed * Time.fixedDeltaTime
-            );
-
-            // Move player if no collisions detected at the given direction
-            if (collisionCount == 0) {
-                rigidBody.MovePosition(rigidBody.position + inputDirection * movementSpeed * Time.fixedDeltaTime);
-
-                // Change direction
-                horizontalDirection = inputDirection.x;
-                verticalDirection = inputDirection.y;
-            }
-
-            animator.SetFloat("HorizontalDirection", horizontalDirection);
-            animator.SetFloat("VerticalDirection", verticalDirection);
-            animator.SetBool("isWalking", true);
-
-            // side facing
-            if (horizontalDirection < 0 && Mathf.Abs(horizontalDirection) >= Mathf.Abs(verticalDirection)) {
-                spriteRenderer.flipX = true;
-            } else {
-                spriteRenderer.flipX = false;
-            }
+            MovementHandler();
         } else {
             animator.SetBool("isWalking", false);
+        }
+
+        animator.SetFloat("HorizontalDirection", facingDirection.x);
+        animator.SetFloat("VerticalDirection", facingDirection.y);
+
+        // side facing
+        if (facingDirection.x < 0 && Mathf.Abs(facingDirection.x) >= Mathf.Abs(facingDirection.y)) {
+            spriteRenderer.flipX = true;
+        } else {
+            spriteRenderer.flipX = false;
         }
     }
 
     void OnMove(InputValue input) {
         inputDirection = input.Get<Vector2>();
+    }
+
+    private void MovementHandler() {
+        bool moveCheck = TryMove(inputDirection);
+
+        if (!moveCheck) {
+            moveCheck = TryMove(new Vector2(inputDirection.x, 0));
+        }
+        if (!moveCheck) {
+            moveCheck = TryMove(new Vector2(0, inputDirection.y));
+        }
+
+        facingDirection = inputDirection;
+        animator.SetBool("isWalking", moveCheck);
+    }
+
+    private bool TryMove(Vector2 input) {
+        if (input == Vector2.zero) return false;
+
+        int collisionCount = rigidBody.Cast(
+            input, contactFilter, collisionList, movementSpeed * Time.fixedDeltaTime + collisionOffset
+        );
+
+        if (collisionCount == 0) {
+            rigidBody.MovePosition(rigidBody.position + input * movementSpeed * Time.fixedDeltaTime);
+            return true;
+        }
+
+        return false;
     }
 }
