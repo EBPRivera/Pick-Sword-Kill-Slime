@@ -8,13 +8,15 @@ public class PlayerController : MonoBehaviour
     public float movementSpeed = 1;
     public float collisionOffset = 0.02f;
     public ContactFilter2D contactFilter;
+    public PushController pushController;
 
     Vector2 inputDirection;
     Rigidbody2D rigidBody;
     Animator animator;
     SpriteRenderer spriteRenderer;
     List<RaycastHit2D> collisionList = new List<RaycastHit2D>();
-    Vector2 facingDirection = new Vector2(0, 0);
+    Vector2 facingDirection = new Vector2(1, 0);
+    bool canMove = true;
 
     // Start is called before the first frame update
     void Start()
@@ -27,7 +29,7 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         // Update player's movement
-        if (inputDirection != Vector2.zero) {
+        if (inputDirection != Vector2.zero && canMove) {
             MovementHandler();
         } else {
             animator.SetBool("isWalking", false);
@@ -46,6 +48,17 @@ public class PlayerController : MonoBehaviour
 
     void OnMove(InputValue input) {
         inputDirection = input.Get<Vector2>();
+    }
+
+    void OnPush() {
+        canMove = false;
+        pushController.PushDirection(facingDirection);
+        animator.SetTrigger("Push");
+    }
+
+    public void FinishPush() {
+        canMove = true;
+        pushController.StopPushing();
     }
 
     private void MovementHandler() {

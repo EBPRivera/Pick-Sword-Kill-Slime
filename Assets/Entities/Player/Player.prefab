@@ -267,6 +267,7 @@ MonoBehaviour:
     maxDepth: 0
     minNormalAngle: 0
     maxNormalAngle: 0
+  pushController: {fileID: 2811793055187973096}
 --- !u!95 &99848275256326325
 Animator:
   serializedVersion: 5
