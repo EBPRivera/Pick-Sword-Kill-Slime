@@ -6,8 +6,8 @@ public class PushController : MonoBehaviour
 {
     public PlayerController playerController;
     BoxCollider2D boxCollider;
-    Vector2 defaultHorizontalPosition = new Vector2(0.09f, -0.13f);
-    Vector2 defaultVerticalPosition = new Vector2(0, -0.21f);
+    Vector2 defaultHorizontalPosition = new Vector2(0.09f, 0.038f);
+    Vector2 defaultVerticalPosition = new Vector2(0, -0.042f);
 
     // Start is called before the first frame update
     void Start()
