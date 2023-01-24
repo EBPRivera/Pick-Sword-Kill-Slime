@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    public float movementSpeed = 1;
+    public float movementSpeed = 3;
     public float collisionOffset = 0.02f;
     public ContactFilter2D contactFilter;
     public PushController pushController;
@@ -59,6 +59,10 @@ public class PlayerController : MonoBehaviour
     public void FinishPush() {
         canMove = true;
         pushController.StopPushing();
+    }
+
+    public Vector2 GetFacingDirection() {
+        return facingDirection;
     }
 
     private void MovementHandler() {
