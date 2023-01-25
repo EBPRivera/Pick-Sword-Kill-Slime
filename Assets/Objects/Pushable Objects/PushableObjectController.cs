@@ -18,13 +18,14 @@ public class PushableObjectController : MonoBehaviour
 
     void FixedUpdate() {
         if (distanceToCover > 0) {
+            float distance = Mathf.Min(speed * Time.fixedDeltaTime, distanceToCover);
             int collision = rigidBody.Cast(
-                moveDirection, contactFilter, collidedObjects, speed * Time.fixedDeltaTime
+                moveDirection, contactFilter, collidedObjects, distance
             );
 
             if (collision == 0) {
-                rigidBody.MovePosition(rigidBody.position + moveDirection * speed * Time.fixedDeltaTime);
-                distanceToCover -= speed * Time.fixedDeltaTime;
+                rigidBody.MovePosition(rigidBody.position + moveDirection * distance);
+                distanceToCover -= distance;
             }
         }
     }
