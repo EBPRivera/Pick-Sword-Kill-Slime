@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
     SpriteRenderer spriteRenderer;
     List<RaycastHit2D> collisionList = new List<RaycastHit2D>();
     Vector2 facingDirection = new Vector2(1, 0);
-    bool canMove = true;
+    bool canAct = true;
 
     // Start is called before the first frame update
     void Start()
@@ -29,7 +29,7 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         // Update player's movement
-        if (inputDirection != Vector2.zero && canMove) {
+        if (inputDirection != Vector2.zero && canAct) {
             MovementHandler();
         } else {
             animator.SetBool("isWalking", false);
@@ -51,14 +51,27 @@ public class PlayerController : MonoBehaviour
     }
 
     void OnPush() {
-        canMove = false;
-        pushController.PushDirection(facingDirection);
-        animator.SetTrigger("Push");
+        if (canAct) {
+            canAct = false;
+            pushController.PushDirection(facingDirection);
+            animator.SetTrigger("Push");
+        }
     }
 
     public void FinishPush() {
-        canMove = true;
+        canAct = true;
         pushController.StopPushing();
+    }
+
+    public void OnAttack() {
+        if (canAct) {
+            canAct = false;
+            animator.SetTrigger("Attack");
+        }
+    }
+
+    public void FinishAttack() {
+        canAct = true;
     }
 
     public Vector2 GetFacingDirection() {
