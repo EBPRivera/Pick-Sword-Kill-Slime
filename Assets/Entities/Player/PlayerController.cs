@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
 {
     public float movementSpeed = 3;
     public float collisionOffset = 0.02f;
+    public float health = 3f;
     public ContactFilter2D contactFilter;
     public PushController pushController;
 
@@ -17,6 +18,7 @@ public class PlayerController : MonoBehaviour
     List<RaycastHit2D> collisionList = new List<RaycastHit2D>();
     Vector2 facingDirection = new Vector2(1, 0);
     bool canAct = true;
+    bool isInvuln = false;
 
     // Start is called before the first frame update
     void Start()
@@ -76,6 +78,27 @@ public class PlayerController : MonoBehaviour
 
     public Vector2 GetFacingDirection() {
         return facingDirection;
+    }
+
+    public void TakeDamage(float damage) {
+        if (!isInvuln) {
+            health -= damage;
+            StartCoroutine(TriggerInvulnStateCo());
+        }
+    }
+
+    private IEnumerator TriggerInvulnStateCo() {
+        isInvuln = true;
+        float endTime = Time.time + 2f;
+
+        while (Time.time < endTime) {
+            spriteRenderer.enabled = false;
+            yield return new WaitForSeconds(0.2f);
+            spriteRenderer.enabled = true;
+            yield return new WaitForSeconds(0.2f);
+        }
+
+        isInvuln = false;
     }
 
     private void MovementHandler() {
