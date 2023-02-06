@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
     public float collisionOffset = 0.02f;
     public float health = 3f;
     public ContactFilter2D contactFilter;
-    public PushController pushController;
+    public HitboxController HitboxController;
 
     Vector2 inputDirection;
     Rigidbody2D rigidBody;
@@ -53,27 +53,24 @@ public class PlayerController : MonoBehaviour
     }
 
     void OnPush() {
-        if (canAct) {
-            canAct = false;
-            pushController.PushDirection(facingDirection);
-            animator.SetTrigger("Push");
-        }
-    }
-
-    public void FinishPush() {
-        canAct = true;
-        pushController.StopPushing();
+        ActivateHitBox("Push");
     }
 
     public void OnAttack() {
+        ActivateHitBox("Attack");
+    }
+
+    private void ActivateHitBox(string trigger) {
         if (canAct) {
             canAct = false;
-            animator.SetTrigger("Attack");
+            HitboxController.SetAction(trigger, facingDirection);
+            animator.SetTrigger(trigger);
         }
     }
 
-    public void FinishAttack() {
+    public void CleanupHitbox() {
         canAct = true;
+        HitboxController.DisableCollider();
     }
 
     public Vector2 GetFacingDirection() {
