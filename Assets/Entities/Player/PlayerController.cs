@@ -5,17 +5,15 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    public float movementSpeed = 3;
-    public float collisionOffset = 0.02f;
+    public float movementSpeed = 150f;
+    public float maxSpeed = 8f;
     public float health = 3f;
-    public ContactFilter2D contactFilter;
     public HitboxController HitboxController;
 
     Vector2 inputDirection;
     Rigidbody2D rigidBody;
     Animator animator;
     SpriteRenderer spriteRenderer;
-    List<RaycastHit2D> collisionList = new List<RaycastHit2D>();
     Vector2 facingDirection = new Vector2(1, 0);
     bool canAct = true;
     bool isInvuln = false;
@@ -32,7 +30,9 @@ public class PlayerController : MonoBehaviour
     {
         // Update player's movement
         if (inputDirection != Vector2.zero && canAct) {
-            MovementHandler();
+            rigidBody.velocity = Vector2.ClampMagnitude(rigidBody.velocity + (inputDirection * movementSpeed * Time.fixedDeltaTime), maxSpeed);
+            facingDirection = inputDirection;
+            animator.SetBool("isWalking", true);
         } else {
             animator.SetBool("isWalking", false);
         }
@@ -96,34 +96,5 @@ public class PlayerController : MonoBehaviour
         }
 
         isInvuln = false;
-    }
-
-    private void MovementHandler() {
-        bool moveCheck = TryMove(inputDirection);
-
-        if (!moveCheck) {
-            moveCheck = TryMove(new Vector2(inputDirection.x, 0));
-        }
-        if (!moveCheck) {
-            moveCheck = TryMove(new Vector2(0, inputDirection.y));
-        }
-
-        facingDirection = inputDirection;
-        animator.SetBool("isWalking", moveCheck);
-    }
-
-    private bool TryMove(Vector2 input) {
-        if (input == Vector2.zero) return false;
-
-        int collisionCount = rigidBody.Cast(
-            input, contactFilter, collisionList, movementSpeed * Time.fixedDeltaTime + collisionOffset
-        );
-
-        if (collisionCount == 0) {
-            rigidBody.MovePosition(rigidBody.position + input * movementSpeed * Time.fixedDeltaTime);
-            return true;
-        }
-
-        return false;
     }
 }

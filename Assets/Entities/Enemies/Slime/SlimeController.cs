@@ -13,10 +13,10 @@ public class SlimeController : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
-    void OnTriggerEnter2D(Collider2D other) {
+    private void OnCollisionEnter2D(Collision2D other) {
         if (other.gameObject.tag == "Player") {
             other.gameObject.GetComponent<PlayerController>().TakeDamage(1);
-        }
+        }    
     }
 
     public void TakeDamage(float damage) {
