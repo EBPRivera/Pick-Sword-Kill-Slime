@@ -3,21 +3,30 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IDamageable
 {
     public float movementSpeed = 150f;
     public float maxSpeed = 8f;
-    public float health = 3f;
+    public float Health { get => _health;
+        set {
+            _health = value;
+            StartCoroutine(TriggerInvulnStateCo());
+        }
+    }
+    public float _health = 3f;
+    public bool IsInvuln { get => _isInvuln;
+        set {
+            _isInvuln = value;
+        }
+    }
+    public bool _isInvuln = false;
     public HitboxController HitboxController;
 
+    bool canAct = true;
     Vector2 inputDirection;
-    Rigidbody2D rigidBody;
+    Rigidbody2D rb;
     Animator animator;
     SpriteRenderer spriteRenderer;
-    bool canAct = true;
-    bool isInvuln = false;
-
-    Vector2 _facingDirection;
     Vector2 FacingDirection {
         set {
             _facingDirection = value;
@@ -29,11 +38,12 @@ public class PlayerController : MonoBehaviour
             return _facingDirection;
         }
     }
+    Vector2 _facingDirection;
 
     // Start is called before the first frame update
     void Start()
     {
-        rigidBody = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         FacingDirection = new Vector2(1, 0);
@@ -43,7 +53,7 @@ public class PlayerController : MonoBehaviour
     {
         // Update player's movement
         if (inputDirection != Vector2.zero && canAct) {
-            rigidBody.velocity = Vector2.ClampMagnitude(rigidBody.velocity + (inputDirection * movementSpeed * Time.fixedDeltaTime), maxSpeed);
+            rb.velocity = Vector2.ClampMagnitude(rb.velocity + (inputDirection * movementSpeed * Time.fixedDeltaTime), maxSpeed);
             FacingDirection = inputDirection;
             animator.SetBool("isWalking", true);
         } else {
@@ -86,15 +96,9 @@ public class PlayerController : MonoBehaviour
         return FacingDirection;
     }
 
-    public void TakeDamage(float damage) {
-        if (!isInvuln) {
-            health -= damage;
-            StartCoroutine(TriggerInvulnStateCo());
-        }
-    }
-
     private IEnumerator TriggerInvulnStateCo() {
-        isInvuln = true;
+        IsInvuln = true;
+        canAct = false;
         float endTime = Time.time + 2f;
 
         while (Time.time < endTime) {
@@ -102,8 +106,27 @@ public class PlayerController : MonoBehaviour
             yield return new WaitForSeconds(0.2f);
             spriteRenderer.enabled = true;
             yield return new WaitForSeconds(0.2f);
+            canAct = true;
         }
 
-        isInvuln = false;
+        IsInvuln = false;
+    }
+
+    public void TakeDamage(float damage) {
+        if (!IsInvuln) {
+            Health -= damage;
+        }
+    }
+    public void TakeDamage(float damage, Vector2 knockback)
+    {
+        if (!IsInvuln) {
+            Health -= damage;
+            rb.AddForce(knockback);
+        }
+    }
+
+    public void Die()
+    {
+        Destroy(gameObject);
     }
 }

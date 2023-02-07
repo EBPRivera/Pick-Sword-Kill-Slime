@@ -71,6 +71,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56a0ff02bef09144e8c9e9e527a303c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  swordDamage: 2
+  knockbackForce: 500
   playerController: {fileID: 9214960834603412692}
 --- !u!1 &6408704650633283079
 GameObject:
@@ -253,7 +255,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movementSpeed: 150
   maxSpeed: 8
-  health: 3
+  _health: 3
+  _isInvuln: 0
   HitboxController: {fileID: 2811793055187973096}
 --- !u!95 &99848275256326325
 Animator:

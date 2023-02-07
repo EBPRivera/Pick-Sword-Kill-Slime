@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class HitboxController : MonoBehaviour
 {
+    public float swordDamage = 2f;
+    public float knockbackForce = 500f;
     public PlayerController playerController;
+
     BoxCollider2D boxCollider;
     Vector2 defaultHorizontalPushPos = new Vector2(0.2565f, 0.1f);
     Vector2 defaultVerticalPushPos = new Vector2(0, -0.1065f);
@@ -52,7 +55,20 @@ public class HitboxController : MonoBehaviour
             // Move object based on player's direction
             other.gameObject.GetComponent<PushableObjectController>().MoveTo(facingDirection);
         } else if (action == "Attack" && other.tag == "Enemy") {
-            other.gameObject.SendMessage("TakeDamage", 2f);
+            IDamageable damageableObject = other.GetComponent<IDamageable>();
+
+            if (damageableObject != null) {
+                Vector2 enemyPosition = other.transform.position;
+                Vector2 playerPosition = transform.parent.position;
+
+                Vector2 direction = (Vector2) (enemyPosition - playerPosition).normalized;
+
+                Vector2 knockback = direction * knockbackForce;
+
+                damageableObject.TakeDamage(swordDamage, knockback);
+            } else {
+                Debug.LogWarning("Other object does not implement IDamageable interface");
+            }
         }
     }
 }
