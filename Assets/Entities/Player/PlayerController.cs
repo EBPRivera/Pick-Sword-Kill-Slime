@@ -14,9 +14,21 @@ public class PlayerController : MonoBehaviour
     Rigidbody2D rigidBody;
     Animator animator;
     SpriteRenderer spriteRenderer;
-    Vector2 facingDirection = new Vector2(1, 0);
     bool canAct = true;
     bool isInvuln = false;
+
+    Vector2 _facingDirection;
+    Vector2 FacingDirection {
+        set {
+            _facingDirection = value;
+
+            animator.SetFloat("HorizontalDirection", _facingDirection.x);
+            animator.SetFloat("VerticalDirection", _facingDirection.y);
+        }
+        get {
+            return _facingDirection;
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -24,6 +36,7 @@ public class PlayerController : MonoBehaviour
         rigidBody = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        FacingDirection = new Vector2(1, 0);
     }
 
     void FixedUpdate()
@@ -31,17 +44,14 @@ public class PlayerController : MonoBehaviour
         // Update player's movement
         if (inputDirection != Vector2.zero && canAct) {
             rigidBody.velocity = Vector2.ClampMagnitude(rigidBody.velocity + (inputDirection * movementSpeed * Time.fixedDeltaTime), maxSpeed);
-            facingDirection = inputDirection;
+            FacingDirection = inputDirection;
             animator.SetBool("isWalking", true);
         } else {
             animator.SetBool("isWalking", false);
         }
 
-        animator.SetFloat("HorizontalDirection", facingDirection.x);
-        animator.SetFloat("VerticalDirection", facingDirection.y);
-
         // side facing
-        if (facingDirection.x < 0 && Mathf.Abs(facingDirection.x) >= Mathf.Abs(facingDirection.y)) {
+        if (FacingDirection.x < 0 && Mathf.Abs(FacingDirection.x) >= Mathf.Abs(FacingDirection.y)) {
             spriteRenderer.flipX = true;
         } else {
             spriteRenderer.flipX = false;
@@ -63,7 +73,7 @@ public class PlayerController : MonoBehaviour
     private void ActivateHitBox(string trigger) {
         if (canAct) {
             canAct = false;
-            HitboxController.SetAction(trigger, facingDirection);
+            HitboxController.SetAction(trigger, FacingDirection);
             animator.SetTrigger(trigger);
         }
     }
@@ -73,7 +83,7 @@ public class PlayerController : MonoBehaviour
     }
 
     public Vector2 GetFacingDirection() {
-        return facingDirection;
+        return FacingDirection;
     }
 
     public void TakeDamage(float damage) {

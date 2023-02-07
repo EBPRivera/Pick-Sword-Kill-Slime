@@ -4,7 +4,21 @@ using UnityEngine;
 
 public class SlimeController : MonoBehaviour
 {
-    public float health = 3f;
+    public float Health {
+        set {
+            _health = value;
+
+            if (_health <= 0) {
+                animator.SetTrigger("Death");
+            } else {
+                animator.SetTrigger("Damaged");
+            }
+        }
+        get {
+            return _health;
+        }
+    }
+    public float _health = 3f;
     public bool isInvuln = false;
 
     Animator animator;
@@ -20,14 +34,8 @@ public class SlimeController : MonoBehaviour
     }
 
     public void TakeDamage(float damage) {
-        health -= damage;
+        Health -= damage;
         isInvuln = true;
-
-        if (health <= 0) {
-            animator.SetTrigger("Death");
-        } else {
-            animator.SetTrigger("Damaged");
-        }
     }
 
     public void SetNotInvuln() {
