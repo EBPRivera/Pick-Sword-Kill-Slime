@@ -68,9 +68,8 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void CleanupHitbox() {
+    public void FinishActing() {
         canAct = true;
-        HitboxController.DisableCollider();
     }
 
     public Vector2 GetFacingDirection() {

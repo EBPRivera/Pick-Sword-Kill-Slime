@@ -18,7 +18,6 @@ public class HitboxController : MonoBehaviour
     void Start()
     {
         boxCollider = GetComponent<BoxCollider2D>();
-        boxCollider.enabled = false;
     }
 
     public void SetAction(string act, Vector2 direction) {
@@ -42,13 +41,7 @@ public class HitboxController : MonoBehaviour
                 }
                 break;
         }
-
-        boxCollider.enabled = true;
         action = act;
-    }
-
-    public void DisableCollider() {
-        boxCollider.enabled = false;
     }
 
     void OnTriggerEnter2D(Collider2D other) {
