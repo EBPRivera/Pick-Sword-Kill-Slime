@@ -41,6 +41,12 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
+        // handle sprite blinking when invulnerable
+        if (hc.IsInvuln && !isBlinking) {
+            StartCoroutine(TemporaryActionDisableCo());
+            StartCoroutine(BlinkCo());
+        }
+
         // Update player's movement
         if (inputDirection != Vector2.zero && canAct) {
             rb.velocity = Vector2.ClampMagnitude(rb.velocity + (inputDirection * movementSpeed * Time.fixedDeltaTime), maxSpeed);
@@ -55,12 +61,6 @@ public class PlayerController : MonoBehaviour
             spriteRenderer.flipX = true;
         } else {
             spriteRenderer.flipX = false;
-        }
-
-        // handle sprite blinking when invulnerable
-        if (hc.IsInvuln && !isBlinking) {
-            isBlinking = true;
-            StartCoroutine(BlinkCo());
         }
     }
 
@@ -93,6 +93,8 @@ public class PlayerController : MonoBehaviour
     }
 
     IEnumerator BlinkCo() {
+        isBlinking = true;
+
         while (hc.IsInvuln) {
             spriteRenderer.enabled = false;
             yield return new WaitForSeconds(0.2f);
@@ -101,5 +103,11 @@ public class PlayerController : MonoBehaviour
         }
 
         isBlinking = false;
+    }
+
+    IEnumerator TemporaryActionDisableCo() {
+        canAct = false;
+        yield return new WaitForSeconds(0.1f);
+        canAct = true;
     }
 }
