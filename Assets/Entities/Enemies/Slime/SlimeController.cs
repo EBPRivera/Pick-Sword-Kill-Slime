@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SlimeController : MonoBehaviour
 {
-    public float knockbackForce = 500f;
+    public float knockbackForce = 50f;
     public float damage = 1f;
 
     private void OnCollisionEnter2D(Collision2D other) {

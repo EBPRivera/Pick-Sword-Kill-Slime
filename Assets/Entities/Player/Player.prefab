@@ -72,7 +72,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   swordDamage: 2
-  knockbackForce: 500
+  knockbackForce: 50
   playerController: {fileID: 9214960834603412692}
 --- !u!1 &6408704650633283079
 GameObject:
