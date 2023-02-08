@@ -31,11 +31,6 @@ public class HealthController : MonoBehaviour, IDamageable
         rb = GetComponent<Rigidbody2D>();
     }
 
-    public void Die()
-    {
-        Destroy(gameObject);
-    }
-
     public void TakeDamage(float damage, Vector2 knockback)
     {
         if (!IsInvuln) {
@@ -49,5 +44,15 @@ public class HealthController : MonoBehaviour, IDamageable
         if (!IsInvuln) {
             Health -= damage;
         }
+    }
+
+    public void SetNotInvuln()
+    {
+        IsInvuln = false;
+    }
+
+    public void Die()
+    {
+        Destroy(gameObject);
     }
 }
