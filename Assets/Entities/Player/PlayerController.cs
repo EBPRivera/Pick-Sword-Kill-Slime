@@ -3,23 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour, IDamageable
+public class PlayerController : MonoBehaviour
 {
     public float movementSpeed = 150f;
     public float maxSpeed = 8f;
-    public float Health { get => _health;
-        set {
-            _health = value;
-            StartCoroutine(TriggerInvulnStateCo());
-        }
-    }
-    public float _health = 3f;
-    public bool IsInvuln { get => _isInvuln;
-        set {
-            _isInvuln = value;
-        }
-    }
-    public bool _isInvuln = false;
     public HitboxController HitboxController;
 
     bool canAct = true;
@@ -96,37 +83,23 @@ public class PlayerController : MonoBehaviour, IDamageable
         return FacingDirection;
     }
 
-    private IEnumerator TriggerInvulnStateCo() {
-        IsInvuln = true;
-        canAct = false;
-        float endTime = Time.time + 2f;
+    // public void StartInvulnCoroutine() {
+    //     StartCoroutine(TriggerInvulnStateCo());
+    // }
 
-        while (Time.time < endTime) {
-            spriteRenderer.enabled = false;
-            yield return new WaitForSeconds(0.2f);
-            spriteRenderer.enabled = true;
-            yield return new WaitForSeconds(0.2f);
-            canAct = true;
-        }
+    // private IEnumerator TriggerInvulnStateCo() {
+    //     IsInvuln = true;
+    //     canAct = false;
+    //     float endTime = Time.time + 2f;
 
-        IsInvuln = false;
-    }
+    //     while (Time.time < endTime) {
+    //         spriteRenderer.enabled = false;
+    //         yield return new WaitForSeconds(0.2f);
+    //         spriteRenderer.enabled = true;
+    //         yield return new WaitForSeconds(0.2f);
+    //         canAct = true;
+    //     }
 
-    public void TakeDamage(float damage) {
-        if (!IsInvuln) {
-            Health -= damage;
-        }
-    }
-    public void TakeDamage(float damage, Vector2 knockback)
-    {
-        if (!IsInvuln) {
-            Health -= damage;
-            rb.AddForce(knockback);
-        }
-    }
-
-    public void Die()
-    {
-        Destroy(gameObject);
-    }
+    //     IsInvuln = false;
+    // }
 }
