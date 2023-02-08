@@ -72,7 +72,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   swordDamage: 2
-  knockbackForce: 500
+  knockbackForce: 50
   playerController: {fileID: 9214960834603412692}
 --- !u!1 &6408704650633283079
 GameObject:
@@ -87,8 +87,9 @@ GameObject:
   - component: {fileID: 671452553053359782}
   - component: {fileID: 4592686101221250576}
   - component: {fileID: 6379784168786375966}
-  - component: {fileID: 9214960834603412692}
   - component: {fileID: 99848275256326325}
+  - component: {fileID: 9214960834603412692}
+  - component: {fileID: 3521596729378755697}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -241,23 +242,6 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &9214960834603412692
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6408704650633283079}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3bb1e8b1d0c359a4c88cf84185c126c2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  movementSpeed: 150
-  maxSpeed: 8
-  _health: 3
-  _isInvuln: 0
-  HitboxController: {fileID: 2811793055187973096}
 --- !u!95 &99848275256326325
 Animator:
   serializedVersion: 5
@@ -278,3 +262,32 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
+--- !u!114 &9214960834603412692
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6408704650633283079}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bb1e8b1d0c359a4c88cf84185c126c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementSpeed: 150
+  maxSpeed: 8
+  HitboxController: {fileID: 2811793055187973096}
+--- !u!114 &3521596729378755697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6408704650633283079}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dee779e7a25fcd4488b7fcbea3901565, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _health: 5
+  _isInvuln: 0

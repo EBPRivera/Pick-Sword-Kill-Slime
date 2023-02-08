@@ -5,7 +5,7 @@ using UnityEngine;
 public class HitboxController : MonoBehaviour
 {
     public float swordDamage = 2f;
-    public float knockbackForce = 500f;
+    public float knockbackForce = 50f;
     public PlayerController playerController;
 
     BoxCollider2D boxCollider;

@@ -3,23 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour, IDamageable
+public class PlayerController : MonoBehaviour
 {
     public float movementSpeed = 150f;
     public float maxSpeed = 8f;
-    public float Health { get => _health;
-        set {
-            _health = value;
-            StartCoroutine(TriggerInvulnStateCo());
-        }
-    }
-    public float _health = 3f;
-    public bool IsInvuln { get => _isInvuln;
-        set {
-            _isInvuln = value;
-        }
-    }
-    public bool _isInvuln = false;
     public HitboxController HitboxController;
 
     bool canAct = true;
@@ -27,6 +14,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     Rigidbody2D rb;
     Animator animator;
     SpriteRenderer spriteRenderer;
+    HealthController hc;
     Vector2 FacingDirection {
         set {
             _facingDirection = value;
@@ -39,6 +27,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         }
     }
     Vector2 _facingDirection;
+    bool isBlinking = false;
 
     // Start is called before the first frame update
     void Start()
@@ -47,10 +36,17 @@ public class PlayerController : MonoBehaviour, IDamageable
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         FacingDirection = new Vector2(1, 0);
+        hc = GetComponent<HealthController>();
     }
 
     void FixedUpdate()
     {
+        // handle sprite blinking when invulnerable
+        if (hc.IsInvuln && !isBlinking) {
+            StartCoroutine(TemporaryActionDisableCo());
+            StartCoroutine(BlinkCo());
+        }
+
         // Update player's movement
         if (inputDirection != Vector2.zero && canAct) {
             rb.velocity = Vector2.ClampMagnitude(rb.velocity + (inputDirection * movementSpeed * Time.fixedDeltaTime), maxSpeed);
@@ -96,37 +92,22 @@ public class PlayerController : MonoBehaviour, IDamageable
         return FacingDirection;
     }
 
-    private IEnumerator TriggerInvulnStateCo() {
-        IsInvuln = true;
-        canAct = false;
-        float endTime = Time.time + 2f;
+    IEnumerator BlinkCo() {
+        isBlinking = true;
 
-        while (Time.time < endTime) {
+        while (hc.IsInvuln) {
             spriteRenderer.enabled = false;
             yield return new WaitForSeconds(0.2f);
             spriteRenderer.enabled = true;
             yield return new WaitForSeconds(0.2f);
-            canAct = true;
         }
 
-        IsInvuln = false;
+        isBlinking = false;
     }
 
-    public void TakeDamage(float damage) {
-        if (!IsInvuln) {
-            Health -= damage;
-        }
-    }
-    public void TakeDamage(float damage, Vector2 knockback)
-    {
-        if (!IsInvuln) {
-            Health -= damage;
-            rb.AddForce(knockback);
-        }
-    }
-
-    public void Die()
-    {
-        Destroy(gameObject);
+    IEnumerator TemporaryActionDisableCo() {
+        canAct = false;
+        yield return new WaitForSeconds(0.1f);
+        canAct = true;
     }
 }
