@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     Rigidbody2D rb;
     Animator animator;
     SpriteRenderer spriteRenderer;
+    HealthController hc;
     Vector2 FacingDirection {
         set {
             _facingDirection = value;
@@ -26,6 +27,7 @@ public class PlayerController : MonoBehaviour
         }
     }
     Vector2 _facingDirection;
+    bool isBlinking = false;
 
     // Start is called before the first frame update
     void Start()
@@ -34,6 +36,7 @@ public class PlayerController : MonoBehaviour
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         FacingDirection = new Vector2(1, 0);
+        hc = GetComponent<HealthController>();
     }
 
     void FixedUpdate()
@@ -52,6 +55,12 @@ public class PlayerController : MonoBehaviour
             spriteRenderer.flipX = true;
         } else {
             spriteRenderer.flipX = false;
+        }
+
+        // handle sprite blinking when invulnerable
+        if (hc.IsInvuln && !isBlinking) {
+            isBlinking = true;
+            StartCoroutine(BlinkCo());
         }
     }
 
@@ -83,23 +92,14 @@ public class PlayerController : MonoBehaviour
         return FacingDirection;
     }
 
-    // public void StartInvulnCoroutine() {
-    //     StartCoroutine(TriggerInvulnStateCo());
-    // }
+    IEnumerator BlinkCo() {
+        while (hc.IsInvuln) {
+            spriteRenderer.enabled = false;
+            yield return new WaitForSeconds(0.2f);
+            spriteRenderer.enabled = true;
+            yield return new WaitForSeconds(0.2f);
+        }
 
-    // private IEnumerator TriggerInvulnStateCo() {
-    //     IsInvuln = true;
-    //     canAct = false;
-    //     float endTime = Time.time + 2f;
-
-    //     while (Time.time < endTime) {
-    //         spriteRenderer.enabled = false;
-    //         yield return new WaitForSeconds(0.2f);
-    //         spriteRenderer.enabled = true;
-    //         yield return new WaitForSeconds(0.2f);
-    //         canAct = true;
-    //     }
-
-    //     IsInvuln = false;
-    // }
+        isBlinking = false;
+    }
 }
