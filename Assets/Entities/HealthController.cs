@@ -18,10 +18,15 @@ public class HealthController : MonoBehaviour, IDamageable
     public bool IsInvuln { get => _isInvuln;
         set {
             _isInvuln = value;
+
+            if (_isInvuln && invulnTimer > 0) {
+                StartCoroutine(TriggerInvulnCo());
+            }
         }
     }
     public float _health;
     public bool _isInvuln;
+    public float invulnTimer = 1;
 
     Animator animator;
     Rigidbody2D rb;
@@ -34,6 +39,7 @@ public class HealthController : MonoBehaviour, IDamageable
     public void TakeDamage(float damage, Vector2 knockback)
     {
         if (!IsInvuln) {
+            IsInvuln = true;
             Health -= damage;
             rb.AddForce(knockback, ForceMode2D.Impulse);
         }
@@ -42,6 +48,7 @@ public class HealthController : MonoBehaviour, IDamageable
     public void TakeDamage(float damage)
     {
         if (!IsInvuln) {
+            IsInvuln = true;
             Health -= damage;
         }
     }
@@ -54,5 +61,10 @@ public class HealthController : MonoBehaviour, IDamageable
     public void Die()
     {
         Destroy(gameObject);
+    }
+
+    private IEnumerator TriggerInvulnCo() {
+        yield return new WaitForSeconds(invulnTimer);
+        IsInvuln = false;
     }
 }
