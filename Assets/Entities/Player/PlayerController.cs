@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,11 +13,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float maxSpeed = 8f;
     [SerializeField] private HitboxController HitboxController;
     [SerializeField] private PlayerAnimator playerAnimator;
+    [SerializeField] private GameInput gameInput;
 
     private bool canAct = true;
     private bool isBlinking = false;
     private bool isWalking = false;
-    private Vector2 inputDirection;
     private Rigidbody2D rigidBody;
     private HealthController healthController;
     private Vector2 facingDirection;
@@ -28,6 +29,11 @@ public class PlayerController : MonoBehaviour
         healthController = GetComponent<HealthController>();
     }
 
+    private void Start() {
+        gameInput.OnPushAction += GameInput_OnPushAction;
+        gameInput.OnAttackAction += GameInput_OnAttackAction;
+    }
+
     private void FixedUpdate()
     {
         if (healthController.IsInvulnerable() && !isBlinking) {
@@ -35,24 +41,25 @@ public class PlayerController : MonoBehaviour
             StartCoroutine(SpriteBlinkingCo());
         }
 
-        if (inputDirection != Vector2.zero && canAct) {
-            rigidBody.velocity = Vector2.ClampMagnitude(rigidBody.velocity + (inputDirection * movementSpeed * Time.fixedDeltaTime), maxSpeed);
-            facingDirection = inputDirection;
+        if (gameInput.InputDirection != Vector2.zero && canAct) {
+            rigidBody.velocity = Vector2.ClampMagnitude(rigidBody.velocity + (gameInput.InputDirection * movementSpeed * Time.fixedDeltaTime), maxSpeed);
+            facingDirection = gameInput.InputDirection;
             isWalking = true;
         } else {
             isWalking = false;
         }
     }
 
-    private void OnMove(InputValue input) {
-        inputDirection = input.Get<Vector2>();
+    private void OnDestroy() {
+        gameInput.OnPushAction -= GameInput_OnPushAction;
+        gameInput.OnAttackAction -= GameInput_OnAttackAction;
     }
 
-    private void OnPush() {
+    private void GameInput_OnPushAction(object sender, EventArgs e) {
         ActivateHitBox(PUSH);
     }
 
-    private void OnAttack() {
+    private void GameInput_OnAttackAction(object sender, EventArgs e) {
         ActivateHitBox(ATTACK);
     }
 
