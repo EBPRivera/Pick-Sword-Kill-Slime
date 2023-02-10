@@ -5,83 +5,86 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    public float movementSpeed = 150f;
-    public float maxSpeed = 8f;
-    public HitboxController HitboxController;
+    private const string PUSH = "Push";
+    private const string ATTACK = "Attack";
 
-    bool canAct = true;
-    Vector2 inputDirection;
-    Rigidbody2D rb;
-    Animator animator;
-    SpriteRenderer spriteRenderer;
-    HealthController hc;
-    Vector2 FacingDirection {
-        set {
-            _facingDirection = value;
+    [SerializeField] private float movementSpeed = 150f;
+    [SerializeField] private float maxSpeed = 8f;
+    [SerializeField] private HitboxController HitboxController;
+    [SerializeField] private PlayerAnimator playerAnimator;
 
-            animator.SetFloat("HorizontalDirection", _facingDirection.x);
-            animator.SetFloat("VerticalDirection", _facingDirection.y);
-        }
-        get {
-            return _facingDirection;
-        }
-    }
-    Vector2 _facingDirection;
-    bool isBlinking = false;
+    private bool canAct = true;
+    private bool isBlinking = false;
+    private bool isWalking = false;
+    private Vector2 inputDirection;
+    private Rigidbody2D rigidBody;
+    private HealthController healthController;
+    private Vector2 facingDirection;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
-        rb = GetComponent<Rigidbody2D>();
-        animator = GetComponent<Animator>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        FacingDirection = new Vector2(1, 0);
-        hc = GetComponent<HealthController>();
+        rigidBody = GetComponent<Rigidbody2D>();
+        facingDirection = new Vector2(1, 0);
+        healthController = GetComponent<HealthController>();
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
-        // handle sprite blinking when invulnerable
-        if (hc.IsInvuln && !isBlinking) {
+        if (healthController.IsInvulnerable() && !isBlinking) {
             StartCoroutine(TemporaryActionDisableCo());
-            StartCoroutine(BlinkCo());
+            StartCoroutine(SpriteBlinkingCo());
         }
 
-        // Update player's movement
         if (inputDirection != Vector2.zero && canAct) {
-            rb.velocity = Vector2.ClampMagnitude(rb.velocity + (inputDirection * movementSpeed * Time.fixedDeltaTime), maxSpeed);
-            FacingDirection = inputDirection;
-            animator.SetBool("isWalking", true);
+            rigidBody.velocity = Vector2.ClampMagnitude(rigidBody.velocity + (inputDirection * movementSpeed * Time.fixedDeltaTime), maxSpeed);
+            facingDirection = inputDirection;
+            isWalking = true;
         } else {
-            animator.SetBool("isWalking", false);
-        }
-
-        // side facing
-        if (FacingDirection.x < 0 && Mathf.Abs(FacingDirection.x) >= Mathf.Abs(FacingDirection.y)) {
-            spriteRenderer.flipX = true;
-        } else {
-            spriteRenderer.flipX = false;
+            isWalking = false;
         }
     }
 
-    void OnMove(InputValue input) {
+    private void OnMove(InputValue input) {
         inputDirection = input.Get<Vector2>();
     }
 
-    void OnPush() {
-        ActivateHitBox("Push");
+    private void OnPush() {
+        ActivateHitBox(PUSH);
     }
 
-    public void OnAttack() {
-        ActivateHitBox("Attack");
+    private void OnAttack() {
+        ActivateHitBox(ATTACK);
     }
 
     private void ActivateHitBox(string trigger) {
         if (canAct) {
             canAct = false;
-            HitboxController.SetAction(trigger, FacingDirection);
-            animator.SetTrigger(trigger);
+            HitboxController.SetAction(trigger, facingDirection);
+            playerAnimator.TriggerAction(trigger);
         }
+    }
+
+    private IEnumerator SpriteBlinkingCo() {
+        isBlinking = true;
+
+        while (healthController.IsInvulnerable()) {
+            playerAnimator.TriggerBlink(false);
+            yield return new WaitForSeconds(0.2f);
+            playerAnimator.TriggerBlink(true);
+            yield return new WaitForSeconds(0.2f);
+        }
+
+        isBlinking = true;
+    }
+
+    private IEnumerator TemporaryActionDisableCo() {
+        canAct = false;
+        yield return new WaitForSeconds(0.1f);
+        canAct = true;
+    }
+
+    public bool IsWalking() {
+        return isWalking;
     }
 
     public void FinishActing() {
@@ -89,25 +92,6 @@ public class PlayerController : MonoBehaviour
     }
 
     public Vector2 GetFacingDirection() {
-        return FacingDirection;
-    }
-
-    IEnumerator BlinkCo() {
-        isBlinking = true;
-
-        while (hc.IsInvuln) {
-            spriteRenderer.enabled = false;
-            yield return new WaitForSeconds(0.2f);
-            spriteRenderer.enabled = true;
-            yield return new WaitForSeconds(0.2f);
-        }
-
-        isBlinking = false;
-    }
-
-    IEnumerator TemporaryActionDisableCo() {
-        canAct = false;
-        yield return new WaitForSeconds(0.1f);
-        canAct = true;
+        return facingDirection;
     }
 }

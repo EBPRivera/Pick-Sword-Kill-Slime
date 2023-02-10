@@ -4,18 +4,8 @@ using UnityEngine;
 
 public class HealthController : MonoBehaviour, IDamageable
 {
-    public float Health { get => _health;
-        set {
-            _health = value;
-
-            if (_health < 0) {
-                animator.SetTrigger("Death");
-            } else {
-                animator.SetTrigger("Damaged");
-            }
-        }
-    }
-    public bool IsInvuln { get => _isInvuln;
+    [SerializeField] private float health;
+    [SerializeField] private bool IsInvuln { get => _isInvuln;
         set {
             _isInvuln = value;
 
@@ -24,14 +14,13 @@ public class HealthController : MonoBehaviour, IDamageable
             }
         }
     }
-    public float _health;
     public bool _isInvuln;
-    public float invulnTimer = 1;
+    [SerializeField] private float invulnTimer = 1;
 
     Animator animator;
     Rigidbody2D rb;
 
-    private void Start() {
+    private void Awake() {
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
     }
@@ -40,7 +29,7 @@ public class HealthController : MonoBehaviour, IDamageable
     {
         if (!IsInvuln) {
             IsInvuln = true;
-            Health -= damage;
+            health -= damage;
             rb.AddForce(knockback, ForceMode2D.Impulse);
         }
     }
@@ -49,13 +38,21 @@ public class HealthController : MonoBehaviour, IDamageable
     {
         if (!IsInvuln) {
             IsInvuln = true;
-            Health -= damage;
+            health -= damage;
         }
     }
 
     public void SetNotInvuln()
     {
         IsInvuln = false;
+    }
+
+    public bool IsInvulnerable() {
+        return IsInvuln;
+    }
+
+    public float GetInvulnTimer() {
+        return invulnTimer;
     }
 
     public void Die()
