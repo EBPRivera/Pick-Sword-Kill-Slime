@@ -8,11 +8,7 @@ public class HealthController : MonoBehaviour, IDamageable
     [SerializeField] private float _health;
     [SerializeField] private float invulnTimer = 1;
 
-    public float Health { get => _health;
-        private set {
-            _health = value;
-        }
-    }
+    public float Health { get => _health; private set => _health = value; }
     public bool IsInvuln { get => _isInvuln;
         private set {
             _isInvuln = value;
@@ -36,8 +32,8 @@ public class HealthController : MonoBehaviour, IDamageable
     public void TakeDamage(float damage, Vector2 knockback)
     {
         if (!IsInvuln) {
-            IsInvuln = true;
             Health -= damage;
+            IsInvuln = true;
             OnDamage?.Invoke(this, EventArgs.Empty);
             rb.AddForce(knockback, ForceMode2D.Impulse);
         }
@@ -46,22 +42,15 @@ public class HealthController : MonoBehaviour, IDamageable
     public void TakeDamage(float damage)
     {
         if (!IsInvuln) {
-            IsInvuln = true;
             Health -= damage;
+            IsInvuln = true;
+            OnDamage?.Invoke(this, EventArgs.Empty);
         }
     }
 
     public void SetNotInvuln()
     {
         IsInvuln = false;
-    }
-
-    public bool IsInvulnerable() {
-        return IsInvuln;
-    }
-
-    public float GetInvulnTimer() {
-        return invulnTimer;
     }
 
     public void Die()
