@@ -1,12 +1,20 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class HealthController : MonoBehaviour, IDamageable
 {
-    [SerializeField] private float health;
-    [SerializeField] private bool IsInvuln { get => _isInvuln;
-        set {
+    [SerializeField] private float _health;
+    [SerializeField] private float invulnTimer = 1;
+
+    public float Health { get => _health;
+        private set {
+            _health = value;
+        }
+    }
+    public bool IsInvuln { get => _isInvuln;
+        private set {
             _isInvuln = value;
 
             if (_isInvuln && invulnTimer > 0) {
@@ -14,14 +22,14 @@ public class HealthController : MonoBehaviour, IDamageable
             }
         }
     }
-    public bool _isInvuln;
-    [SerializeField] private float invulnTimer = 1;
+    private bool _isInvuln;
+    private Rigidbody2D rb;
 
-    Animator animator;
-    Rigidbody2D rb;
+    public event EventHandler OnInvulnerableTrigger;
+    public event EventHandler OnVulnerableTrigger;
+    public event EventHandler OnDamage;
 
     private void Awake() {
-        animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
     }
 
@@ -29,7 +37,8 @@ public class HealthController : MonoBehaviour, IDamageable
     {
         if (!IsInvuln) {
             IsInvuln = true;
-            health -= damage;
+            Health -= damage;
+            OnDamage?.Invoke(this, EventArgs.Empty);
             rb.AddForce(knockback, ForceMode2D.Impulse);
         }
     }
@@ -38,7 +47,7 @@ public class HealthController : MonoBehaviour, IDamageable
     {
         if (!IsInvuln) {
             IsInvuln = true;
-            health -= damage;
+            Health -= damage;
         }
     }
 
@@ -61,7 +70,9 @@ public class HealthController : MonoBehaviour, IDamageable
     }
 
     private IEnumerator TriggerInvulnCo() {
+        OnInvulnerableTrigger?.Invoke(this, EventArgs.Empty);
         yield return new WaitForSeconds(invulnTimer);
         IsInvuln = false;
+        OnVulnerableTrigger?.Invoke(this, EventArgs.Empty);
     }
 }

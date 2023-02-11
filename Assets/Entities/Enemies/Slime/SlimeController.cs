@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class SlimeController : MonoBehaviour
 {
-    public float knockbackForce = 50f;
-    public float damage = 1f;
+    [SerializeField] private float knockbackForce = 50f;
+    [SerializeField] private float damage = 1f;
 
     private void OnCollisionEnter2D(Collision2D other) {
         if (other.gameObject.tag == "Player") {

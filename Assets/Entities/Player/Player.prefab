@@ -305,6 +305,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee779e7a25fcd4488b7fcbea3901565, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 0
-  _isInvuln: 0
+  _health: 5
   invulnTimer: 1
