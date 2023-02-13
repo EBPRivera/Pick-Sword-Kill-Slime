@@ -11,18 +11,28 @@ public class SlimeAnimator : MonoBehaviour
     private SpriteRenderer sprite;
     private Animator animator;
     private HealthController healthController;
+    private SlimeController slimeController;
     private bool isBlinking;
 
     private void Awake() {
         sprite = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
         healthController = GetComponentInParent<HealthController>();
+        slimeController = GetComponentInParent<SlimeController>();
     }
 
     private void Start() {
         healthController.OnInvulnerableTrigger += HealthController_OnInvulnerableTrigger;
         healthController.OnVulnerableTrigger += HealthController_OnVulnerableTrigger;
         healthController.OnDamage += HealthController_OnDamage;
+    }
+
+    private void FixedUpdate() {
+        if (slimeController.FacingDirection.x < 0) {
+            sprite.flipX = true;
+        } else {
+            sprite.flipX = false;
+        }
     }
 
     private void OnDestroy() {

@@ -275,6 +275,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   knockbackForce: 50
   damage: 1
+  movementSpeed: 100
+  maxSpeed: 3
 --- !u!114 &4439310445090602112
 MonoBehaviour:
   m_ObjectHideFlags: 0
