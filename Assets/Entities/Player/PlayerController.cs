@@ -22,8 +22,7 @@ public class PlayerController : MonoBehaviour
     public Vector2 FacingDirection { get; private set; }
     public bool IsWalking { get; private set; }
 
-    private void Awake()
-    {
+    private void Awake() {
         rigidBody = GetComponent<Rigidbody2D>();
         FacingDirection = new Vector2(1, 0);
         healthController = GetComponent<HealthController>();
@@ -35,11 +34,12 @@ public class PlayerController : MonoBehaviour
         healthController.OnDamage += HealthController_OnDamage;
     }
 
-    private void FixedUpdate()
-    {
-        if (gameInput.InputDirection != Vector2.zero && canAct) {
-            rigidBody.velocity = Vector2.ClampMagnitude(rigidBody.velocity + (gameInput.InputDirection * movementSpeed * Time.fixedDeltaTime), maxSpeed);
-            FacingDirection = gameInput.InputDirection;
+    private void FixedUpdate() {
+        Vector2 inputDirection = gameInput.GetMovementVectorNormalized();
+
+        if (inputDirection != Vector2.zero && canAct) {
+            rigidBody.velocity = Vector2.ClampMagnitude(rigidBody.velocity + (inputDirection * movementSpeed * Time.fixedDeltaTime), maxSpeed);
+            FacingDirection = inputDirection;
             IsWalking = true;
         } else {
             IsWalking = false;
