@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7816552798605540447}
   - component: {fileID: 2787400147377607367}
   - component: {fileID: 68707937612794714}
+  - component: {fileID: 7021077609761376187}
   m_Layer: 0
   m_Name: SlimeSprite
   m_TagString: Untagged
@@ -118,7 +119,64 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d6ce180bf62c1e479b5918cf84c1f48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthController: {fileID: 4439310445090602112}
+--- !u!114 &7021077609761376187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1169387127950306257}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcd03e0d459edbc4bb6ace26d5936446, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &1332409962656132538
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 643907758239090626}
+  - component: {fileID: 7111390296594190940}
+  m_Layer: 0
+  m_Name: Detector
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &643907758239090626
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1332409962656132538}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2484074686208311186}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7111390296594190940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1332409962656132538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80a3362c63f5d5249ab50d33921b470d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detectionRadius: 3
+  target: {fileID: 0}
 --- !u!1 &8315100380460515478
 GameObject:
   m_ObjectHideFlags: 0
@@ -152,6 +210,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 789966570621618874}
+  - {fileID: 643907758239090626}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -216,6 +275,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   knockbackForce: 50
   damage: 1
+  movementSpeed: 100
+  maxSpeed: 3
 --- !u!114 &4439310445090602112
 MonoBehaviour:
   m_ObjectHideFlags: 0
