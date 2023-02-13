@@ -303,9 +303,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movementSpeed: 150
   maxSpeed: 8
-  HitboxController: {fileID: 2811793055187973096}
+  hitboxController: {fileID: 2811793055187973096}
   playerAnimator: {fileID: 4542332939134492858}
   gameInput: {fileID: 0}
+  objectLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!114 &3521596729378755697
 MonoBehaviour:
   m_ObjectHideFlags: 0
