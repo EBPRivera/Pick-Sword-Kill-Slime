@@ -357,15 +357,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1291458401120534321, guid: bee72c77e03170841b725b2a90c38eb9, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1291458401120534321, guid: bee72c77e03170841b725b2a90c38eb9, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1291458401120534321, guid: bee72c77e03170841b725b2a90c38eb9, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1291458401120534321, guid: bee72c77e03170841b725b2a90c38eb9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -389,6 +389,11 @@ PrefabInstance:
       objectReference: {fileID: 230737188}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bee72c77e03170841b725b2a90c38eb9, type: 3}
+--- !u!1 &746795663 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6408704650633283079, guid: bee72c77e03170841b725b2a90c38eb9, type: 3}
+  m_PrefabInstance: {fileID: 711429858}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1514558734
 GameObject:
   m_ObjectHideFlags: 0
@@ -2292,23 +2297,6 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
---- !u!1 &1898987819 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1169387127950306257, guid: 9018bd2c5a42f384ca9e27431ef0b324, type: 3}
-  m_PrefabInstance: {fileID: 5059964548935242504}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1898987824
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1898987819}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bcd03e0d459edbc4bb6ace26d5936446, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &5059964548935242504
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2360,6 +2348,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7111390296594190940, guid: 9018bd2c5a42f384ca9e27431ef0b324, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 746795663}
+    - target: {fileID: 7111390296594190940, guid: 9018bd2c5a42f384ca9e27431ef0b324, type: 3}
+      propertyPath: target
+      value: 
+      objectReference: {fileID: 746795663}
     - target: {fileID: 8315100380460515478, guid: 9018bd2c5a42f384ca9e27431ef0b324, type: 3}
       propertyPath: m_Name
       value: Slime
