@@ -50,7 +50,7 @@ public class HitboxController : MonoBehaviour
     void OnTriggerEnter2D(Collider2D other) {
         if (action == "Push" && other.tag == "PushableObject") {
             // Get player's direction
-            Vector2 facingDirection = playerController.GetFacingDirection();
+            Vector2 facingDirection = playerController.FacingDirection;
 
             // Move object based on player's direction
             other.gameObject.GetComponent<PushableObjectController>().MoveTo(facingDirection);

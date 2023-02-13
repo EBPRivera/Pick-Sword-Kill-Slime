@@ -1,22 +1,16 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class HealthController : MonoBehaviour, IDamageable
 {
-    public float Health { get => _health;
-        set {
-            _health = value;
+    [SerializeField] private float _health;
+    [SerializeField] private float invulnTimer = 1;
 
-            if (_health < 0) {
-                animator.SetTrigger("Death");
-            } else {
-                animator.SetTrigger("Damaged");
-            }
-        }
-    }
+    public float Health { get => _health; private set => _health = value; }
     public bool IsInvuln { get => _isInvuln;
-        set {
+        private set {
             _isInvuln = value;
 
             if (_isInvuln && invulnTimer > 0) {
@@ -24,23 +18,23 @@ public class HealthController : MonoBehaviour, IDamageable
             }
         }
     }
-    public float _health;
-    public bool _isInvuln;
-    public float invulnTimer = 1;
+    private bool _isInvuln;
+    private Rigidbody2D rb;
 
-    Animator animator;
-    Rigidbody2D rb;
+    public event EventHandler OnInvulnerableTrigger;
+    public event EventHandler OnVulnerableTrigger;
+    public event EventHandler OnDamage;
 
-    private void Start() {
-        animator = GetComponent<Animator>();
+    private void Awake() {
         rb = GetComponent<Rigidbody2D>();
     }
 
     public void TakeDamage(float damage, Vector2 knockback)
     {
         if (!IsInvuln) {
-            IsInvuln = true;
             Health -= damage;
+            IsInvuln = true;
+            OnDamage?.Invoke(this, EventArgs.Empty);
             rb.AddForce(knockback, ForceMode2D.Impulse);
         }
     }
@@ -48,8 +42,9 @@ public class HealthController : MonoBehaviour, IDamageable
     public void TakeDamage(float damage)
     {
         if (!IsInvuln) {
-            IsInvuln = true;
             Health -= damage;
+            IsInvuln = true;
+            OnDamage?.Invoke(this, EventArgs.Empty);
         }
     }
 
@@ -64,7 +59,9 @@ public class HealthController : MonoBehaviour, IDamageable
     }
 
     private IEnumerator TriggerInvulnCo() {
+        OnInvulnerableTrigger?.Invoke(this, EventArgs.Empty);
         yield return new WaitForSeconds(invulnTimer);
         IsInvuln = false;
+        OnVulnerableTrigger?.Invoke(this, EventArgs.Empty);
     }
 }
