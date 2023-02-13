@@ -10,23 +10,33 @@ public class PlayerController : MonoBehaviour
     private const string ATTACK = "Attack";
     private const string DEATH = "Death";
 
+    [Header("Player Attributes")]
     [SerializeField] private float movementSpeed = 150f;
     [SerializeField] private float maxSpeed = 8f;
-    [SerializeField] private HitboxController HitboxController;
+    
+    [Header("Children")]
+    [SerializeField] private HitboxController hitboxController;
     [SerializeField] private PlayerAnimator playerAnimator;
+    
+    [Header("Game Input")]
     [SerializeField] private GameInput gameInput;
 
+    [Header("Layer Selection")]
+    [SerializeField] private LayerMask objectLayerMask;
+
     private bool canAct = true;
+    private float pushDetectionDistance = 0.2f;
     private Rigidbody2D rigidBody;
     private HealthController healthController;
+    private Collider2D playerCollider;
     public Vector2 FacingDirection { get; private set; }
     public bool IsWalking { get; private set; }
 
-    private void Awake()
-    {
+    private void Awake() {
         rigidBody = GetComponent<Rigidbody2D>();
         FacingDirection = new Vector2(1, 0);
         healthController = GetComponent<HealthController>();
+        playerCollider = GetComponent<Collider2D>();
     }
 
     private void Start() {
@@ -35,11 +45,12 @@ public class PlayerController : MonoBehaviour
         healthController.OnDamage += HealthController_OnDamage;
     }
 
-    private void FixedUpdate()
-    {
-        if (gameInput.InputDirection != Vector2.zero && canAct) {
-            rigidBody.velocity = Vector2.ClampMagnitude(rigidBody.velocity + (gameInput.InputDirection * movementSpeed * Time.fixedDeltaTime), maxSpeed);
-            FacingDirection = gameInput.InputDirection;
+    private void FixedUpdate() {
+        Vector2 inputDirection = gameInput.GetMovementVectorNormalized();
+
+        if (inputDirection != Vector2.zero && canAct) {
+            rigidBody.velocity = Vector2.ClampMagnitude(rigidBody.velocity + (inputDirection * movementSpeed * Time.fixedDeltaTime), maxSpeed);
+            FacingDirection = inputDirection;
             IsWalking = true;
         } else {
             IsWalking = false;
@@ -53,11 +64,25 @@ public class PlayerController : MonoBehaviour
     }
 
     private void GameInput_OnPushAction(object sender, EventArgs e) {
-        ActivateHitBox(PUSH);
+        if (canAct) {
+            canAct = false;
+            playerAnimator.TriggerAction(PUSH);
+            Vector2 startPosition = playerCollider.ClosestPoint((Vector2) gameObject.transform.position + FacingDirection);
+            RaycastHit2D raycastHit = Physics2D.Raycast(startPosition, FacingDirection, pushDetectionDistance, objectLayerMask);
+            
+            if (raycastHit) {
+                raycastHit.transform.gameObject.TryGetComponent<PushableObjectController>(out PushableObjectController pushableObject);
+                pushableObject?.MoveTo(FacingDirection);
+            }
+        }
     }
 
     private void GameInput_OnAttackAction(object sender, EventArgs e) {
-        ActivateHitBox(ATTACK);
+        if (canAct) {
+            canAct = false;
+            hitboxController.SetAction(ATTACK, FacingDirection);
+            playerAnimator.TriggerAction(ATTACK);
+        }
     }
 
     private void HealthController_OnDamage(object sender, EventArgs e) {
@@ -66,14 +91,6 @@ public class PlayerController : MonoBehaviour
             canAct = false;
         } else {
             StartCoroutine(TemporaryActionDisableCo());
-        }
-    }
-
-    private void ActivateHitBox(string trigger) {
-        if (canAct) {
-            canAct = false;
-            HitboxController.SetAction(trigger, FacingDirection);
-            playerAnimator.TriggerAction(trigger);
         }
     }
 
