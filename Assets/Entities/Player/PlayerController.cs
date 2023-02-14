@@ -71,8 +71,8 @@ public class PlayerController : MonoBehaviour
             RaycastHit2D raycastHit = Physics2D.Raycast(startPosition, FacingDirection, pushDetectionDistance, objectLayerMask);
             
             if (raycastHit) {
-                raycastHit.transform.gameObject.TryGetComponent<PushableObjectController>(out PushableObjectController pushableObject);
-                pushableObject?.MoveTo(FacingDirection);
+                raycastHit.transform.gameObject.TryGetComponent<IPushable>(out IPushable pushableObject);
+                pushableObject?.Push(gameObject.transform.position);
             }
         }
     }
