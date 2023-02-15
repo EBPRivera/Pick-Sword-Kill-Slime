@@ -11,8 +11,7 @@ public class PlayerController : MonoBehaviour
     private const string DEATH = "Death";
 
     [Header("Player Attributes")]
-    [SerializeField] private float movementSpeed = 150f;
-    [SerializeField] private float maxSpeed = 8f;
+    [SerializeField] private EntitySO entitySO;
     
     [Header("Children")]
     [SerializeField] private HitboxController hitboxController;
@@ -34,7 +33,7 @@ public class PlayerController : MonoBehaviour
 
     private void Awake() {
         rigidBody = GetComponent<Rigidbody2D>();
-        FacingDirection = new Vector2(1, 0);
+        FacingDirection = Vector2.right;
         healthController = GetComponent<HealthController>();
         playerCollider = GetComponent<Collider2D>();
     }
@@ -49,7 +48,7 @@ public class PlayerController : MonoBehaviour
         Vector2 inputDirection = gameInput.GetMovementVectorNormalized();
 
         if (inputDirection != Vector2.zero && canAct) {
-            rigidBody.velocity = Vector2.ClampMagnitude(rigidBody.velocity + (inputDirection * movementSpeed * Time.fixedDeltaTime), maxSpeed);
+            rigidBody.velocity = Vector2.ClampMagnitude(rigidBody.velocity + (inputDirection * entitySO.movementSpeed * Time.fixedDeltaTime), entitySO.maxSpeed);
             FacingDirection = inputDirection;
             IsWalking = true;
         } else {
