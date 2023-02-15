@@ -273,10 +273,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47f2e012a5a1ac3428df1d73b35a0756, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  knockbackForce: 50
-  damage: 1
-  movementSpeed: 100
-  maxSpeed: 3
+  entitySO: {fileID: 11400000, guid: f12de4b9751385a4bbc66e779c42dab7, type: 2}
+  detector: {fileID: 7111390296594190940}
 --- !u!114 &4439310445090602112
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -289,5 +287,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee779e7a25fcd4488b7fcbea3901565, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: 3
-  invulnTimer: 0
+  damageableSO: {fileID: 11400000, guid: adbab167d7c044d4bba89d9f1a929df6, type: 2}

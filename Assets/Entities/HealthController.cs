@@ -5,21 +5,13 @@ using UnityEngine;
 
 public class HealthController : MonoBehaviour, IDamageable
 {
-    [SerializeField] private float _health;
-    [SerializeField] private float invulnTimer = 1;
+    [SerializeField] private DamageableSO damageableSO;
 
-    public float Health { get => _health; private set => _health = value; }
-    public bool IsInvuln { get => _isInvuln;
-        private set {
-            _isInvuln = value;
-
-            if (_isInvuln && invulnTimer > 0) {
-                StartCoroutine(TriggerInvulnCo());
-            }
-        }
-    }
-    private bool _isInvuln;
+    private float invulnerableTimer;
     private Rigidbody2D rb;
+
+    public float Health { get; private set; }
+    public bool IsInvuln { get; private set; }
 
     public event EventHandler OnInvulnerableTrigger;
     public event EventHandler OnVulnerableTrigger;
@@ -27,6 +19,8 @@ public class HealthController : MonoBehaviour, IDamageable
 
     private void Awake() {
         rb = GetComponent<Rigidbody2D>();
+        Health = damageableSO.health;
+        invulnerableTimer = damageableSO.invulnerableTimer;
     }
 
     public void TakeDamage(float damage, Vector2 knockback)
@@ -34,6 +28,9 @@ public class HealthController : MonoBehaviour, IDamageable
         if (!IsInvuln) {
             Health -= damage;
             IsInvuln = true;
+            if (invulnerableTimer > 0) {
+                StartCoroutine(TriggerInvulnCo());
+            }
             OnDamage?.Invoke(this, EventArgs.Empty);
             rb.AddForce(knockback, ForceMode2D.Impulse);
         }
@@ -44,6 +41,9 @@ public class HealthController : MonoBehaviour, IDamageable
         if (!IsInvuln) {
             Health -= damage;
             IsInvuln = true;
+            if (invulnerableTimer > 0) {
+                StartCoroutine(TriggerInvulnCo());
+            }
             OnDamage?.Invoke(this, EventArgs.Empty);
         }
     }
@@ -60,7 +60,7 @@ public class HealthController : MonoBehaviour, IDamageable
 
     private IEnumerator TriggerInvulnCo() {
         OnInvulnerableTrigger?.Invoke(this, EventArgs.Empty);
-        yield return new WaitForSeconds(invulnTimer);
+        yield return new WaitForSeconds(invulnerableTimer);
         IsInvuln = false;
         OnVulnerableTrigger?.Invoke(this, EventArgs.Empty);
     }
