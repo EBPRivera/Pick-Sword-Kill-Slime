@@ -24,7 +24,6 @@ public class Slime : MonoBehaviour, IDamageable
     public event EventHandler<OnHitEventArgs> OnHit;
     public class OnHitEventArgs : EventArgs {
         public string trigger;
-        public float health;
     }
 
     private void Awake() {
@@ -87,10 +86,10 @@ public class Slime : MonoBehaviour, IDamageable
 
             if (health <= 0) {
                 canMove = false;
-                OnHit?.Invoke(this, new OnHitEventArgs {trigger = DEATH, health = health});
+                OnHit?.Invoke(this, new OnHitEventArgs {trigger = DEATH});
             } else {
                 StartCoroutine(TemporaryDisableMovement());
-                OnHit?.Invoke(this, new OnHitEventArgs {trigger = DAMAGED, health = health});
+                OnHit?.Invoke(this, new OnHitEventArgs {trigger = DAMAGED});
             }
         }
     }
