@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Player
   m_EditorClassIdentifier: 
   prefab: {fileID: 1291458401120534321, guid: bee72c77e03170841b725b2a90c38eb9, type: 3}
-  objectName: 
-  damage: 0
-  knockbackForce: 0
-  movementSpeed: 0
-  maxSpeed: 0
+  objectName: Player
+  damage: 2
+  knockbackForce: 50
+  movementSpeed: 150
+  maxSpeed: 8
