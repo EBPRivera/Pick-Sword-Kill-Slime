@@ -12,8 +12,8 @@ public class SlimeController : MonoBehaviour
     [Header("Children")]
     [SerializeField] private Detector detector;
 
+    public bool IsMoving { get; private set; }
     private bool canMove = true;
-    // private Detector detector;
     private Rigidbody2D rigidBody;
     private HealthController healthController;
 
@@ -36,7 +36,10 @@ public class SlimeController : MonoBehaviour
         if (detector.Detected && canMove) {
             Vector2 direction = (Vector2) (detector.DetectedEntity.transform.position - gameObject.transform.position).normalized;
             rigidBody.velocity = Vector2.ClampMagnitude(rigidBody.velocity + (direction * entitySO.movementSpeed * Time.fixedDeltaTime), entitySO.maxSpeed);
+            IsMoving = true;
             FacingDirection = direction;
+        } else {
+            IsMoving = false;
         }
     }
 
