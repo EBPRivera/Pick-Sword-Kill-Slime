@@ -10,7 +10,6 @@ public class PlayerAnimator : MonoBehaviour
     private const string VERTICAL_DIRECTION = "VerticalDirection";
 
     [SerializeField] private Player player;
-    [SerializeField] private HealthController healthController;
 
     private Animator animator;
     private SpriteRenderer sprite;
@@ -25,8 +24,7 @@ public class PlayerAnimator : MonoBehaviour
     }
 
     private void Start() {
-        healthController.OnInvulnerableTrigger += HealthController_OnInvulnerableTrigger;
-        healthController.OnVulnerableTrigger += HealthController_OnVulnerableTrigger;
+        player.OnInvulnerableToggle += Player_OnInvulnerableToggle;
         player.OnTriggerAction += Player_OnTriggerAction;
     }
 
@@ -37,27 +35,23 @@ public class PlayerAnimator : MonoBehaviour
         animator.SetFloat(HORIZONTAL_DIRECTION, facingDirection.x);
         animator.SetFloat(VERTICAL_DIRECTION, facingDirection.y);
 
-        if (facingDirection.x < 0) {
-            sprite.flipX = true;
-        } else {
-            sprite.flipX = false;
-        }
+        sprite.flipX = facingDirection.x < 0;
     }
 
     private void OnDestroy() {
-        healthController.OnInvulnerableTrigger -= HealthController_OnInvulnerableTrigger;
-        healthController.OnVulnerableTrigger -= HealthController_OnVulnerableTrigger;
+        player.OnInvulnerableToggle -= Player_OnInvulnerableToggle;
+        player.OnTriggerAction -= Player_OnTriggerAction;
     }
 
-    private void HealthController_OnInvulnerableTrigger(object sender, EventArgs e) {
-        if (healthController.Health <= 0) return;
+    private void Player_OnInvulnerableToggle(object sender, Player.OnInvulnerableToggleEventArgs e) {
+        if (e.isInvulnerable) {
+            if (e.health <= 0) return;
 
-        isBlinking = true;
-        StartCoroutine(BlinkingCo());
-    }
-
-    private void HealthController_OnVulnerableTrigger(object sender, EventArgs e) {
-        isBlinking = false;
+            isBlinking = true;
+            StartCoroutine(BlinkingCo());
+        } else {
+            isBlinking = false;
+        }
     }
 
     private void Player_OnTriggerAction(object sender, Player.OnTriggerActionEventArgs e) {
