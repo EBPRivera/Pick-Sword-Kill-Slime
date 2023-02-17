@@ -71,6 +71,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56a0ff02bef09144e8c9e9e527a303c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 5163117851882644092}
   swordDamage: 2
   knockbackForce: 50
 --- !u!1 &4301287405706317528
@@ -85,7 +86,6 @@ GameObject:
   - component: {fileID: 5959684701461336937}
   - component: {fileID: 8114952960245518456}
   - component: {fileID: 4542332939134492858}
-  - component: {fileID: 3988420827063964945}
   m_Layer: 0
   m_Name: PlayerSprite
   m_TagString: Untagged
@@ -193,18 +193,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 813549c3df5b8a2488d2f8470eb29b92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &3988420827063964945
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4301287405706317528}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afc3a8b7117858e42863a0dd13fbc23c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  player: {fileID: 5163117851882644092}
+  healthController: {fileID: 0}
 --- !u!1 &6408704650633283079
 GameObject:
   m_ObjectHideFlags: 0
@@ -216,8 +206,7 @@ GameObject:
   - component: {fileID: 1291458401120534321}
   - component: {fileID: 671452553053359782}
   - component: {fileID: 4592686101221250576}
-  - component: {fileID: 9214960834603412692}
-  - component: {fileID: 3521596729378755697}
+  - component: {fileID: 5163117851882644092}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -288,7 +277,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.313, y: 0.25}
   m_EdgeRadius: 0
---- !u!114 &9214960834603412692
+--- !u!114 &5163117851882644092
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -297,26 +286,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 6408704650633283079}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3bb1e8b1d0c359a4c88cf84185c126c2, type: 3}
+  m_Script: {fileID: 11500000, guid: b95a591e4b22be84cb97bc9ab2c98373, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damageableSO: {fileID: 11400000, guid: ea1132bb475fab343852b6c7c8fdbbc9, type: 2}
   entitySO: {fileID: 11400000, guid: ee965828f22307c409640e70ac4ca083, type: 2}
-  hitboxController: {fileID: 2811793055187973096}
   playerAnimator: {fileID: 4542332939134492858}
   gameInput: {fileID: 0}
   objectLayerMask:
     serializedVersion: 2
     m_Bits: 64
---- !u!114 &3521596729378755697
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6408704650633283079}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dee779e7a25fcd4488b7fcbea3901565, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damageableSO: {fileID: 11400000, guid: ea1132bb475fab343852b6c7c8fdbbc9, type: 2}
