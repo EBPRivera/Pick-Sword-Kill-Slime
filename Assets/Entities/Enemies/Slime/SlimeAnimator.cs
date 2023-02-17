@@ -7,18 +7,17 @@ public class SlimeAnimator : MonoBehaviour
 {
     private string DAMAGED = "Damaged";
     private string DEATH = "Death";
+    private string IS_MOVING = "IsMoving";
 
+    [SerializeField] private HealthController healthController;
+    [SerializeField] private SlimeController slimeController;
     private SpriteRenderer sprite;
     private Animator animator;
-    private HealthController healthController;
-    private SlimeController slimeController;
     private bool isBlinking;
 
     private void Awake() {
         sprite = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
-        healthController = GetComponentInParent<HealthController>();
-        slimeController = GetComponentInParent<SlimeController>();
     }
 
     private void Start() {
@@ -33,6 +32,8 @@ public class SlimeAnimator : MonoBehaviour
         } else {
             sprite.flipX = false;
         }
+
+        animator.SetBool(IS_MOVING, slimeController.IsMoving);
     }
 
     private void OnDestroy() {

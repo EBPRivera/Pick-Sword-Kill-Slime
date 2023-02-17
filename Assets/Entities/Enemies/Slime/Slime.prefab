@@ -119,6 +119,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d6ce180bf62c1e479b5918cf84c1f48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  healthController: {fileID: 4439310445090602112}
+  slimeController: {fileID: 4611846016150711424}
 --- !u!114 &7021077609761376187
 MonoBehaviour:
   m_ObjectHideFlags: 0
