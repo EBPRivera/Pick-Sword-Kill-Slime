@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcf89afe87302624f9911c201193c3d0, type: 3}
   m_Name: Slime
   m_EditorClassIdentifier: 
-  prefab: {fileID: 0}
-  objectName: 
-  damage: 0
-  knockbackForce: 0
-  movementSpeed: 0
-  maxSpeed: 0
+  prefab: {fileID: 2484074686208311186, guid: 9018bd2c5a42f384ca9e27431ef0b324, type: 3}
+  objectName: Slime
+  damage: 2
+  knockbackForce: 50
+  movementSpeed: 100
+  maxSpeed: 3
