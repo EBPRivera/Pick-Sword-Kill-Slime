@@ -9,15 +9,17 @@ public class PlayerAnimator : MonoBehaviour
     private const string HORIZONTAL_DIRECTION = "HorizontalDirection";
     private const string VERTICAL_DIRECTION = "VerticalDirection";
 
-    private PlayerController playerController;
-    private HealthController healthController;
+    [SerializeField] private Player player;
+    [SerializeField] private HealthController healthController;
+
     private Animator animator;
     private SpriteRenderer sprite;
     private bool isBlinking = false;
 
+    public event EventHandler OnFinishActing;
+    public event EventHandler OnDeath;
+
     private void Awake() {
-        playerController = GetComponentInParent<PlayerController>();
-        healthController = GetComponentInParent<HealthController>();
         animator = GetComponent<Animator>();
         sprite = GetComponent<SpriteRenderer>();
     }
@@ -25,12 +27,13 @@ public class PlayerAnimator : MonoBehaviour
     private void Start() {
         healthController.OnInvulnerableTrigger += HealthController_OnInvulnerableTrigger;
         healthController.OnVulnerableTrigger += HealthController_OnVulnerableTrigger;
+        player.OnTriggerAction += Player_OnTriggerAction;
     }
 
     private void FixedUpdate() {
-        Vector2 facingDirection = playerController.FacingDirection;
+        Vector2 facingDirection = player.FacingDirection;
         
-        animator.SetBool(IS_WALKING, playerController.IsWalking);
+        animator.SetBool(IS_WALKING, player.IsWalking);
         animator.SetFloat(HORIZONTAL_DIRECTION, facingDirection.x);
         animator.SetFloat(VERTICAL_DIRECTION, facingDirection.y);
 
@@ -57,6 +60,10 @@ public class PlayerAnimator : MonoBehaviour
         isBlinking = false;
     }
 
+    private void Player_OnTriggerAction(object sender, Player.OnTriggerActionEventArgs e) {
+        animator.SetTrigger(e.action);
+    }
+
     private IEnumerator BlinkingCo() {
         while (isBlinking) {
             sprite.enabled = true;
@@ -67,7 +74,11 @@ public class PlayerAnimator : MonoBehaviour
         sprite.enabled = true;
     }
 
-    public void TriggerAction(string action) {
-        animator.SetTrigger(action);
+    public void OnFinishActingKeyframeEvent() {
+        OnFinishActing?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void OnDeathKeyframeEvent() {
+        OnDeath?.Invoke(this, EventArgs.Empty);
     }
 }

@@ -4,23 +4,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+public class Player : MonoBehaviour
 {
     private const string PUSH = "Push";
     private const string ATTACK = "Attack";
     private const string DEATH = "Death";
 
-    [Header("Player Attributes")]
     [SerializeField] private EntitySO entitySO;
-    
-    [Header("Children")]
-    [SerializeField] private HitboxController hitboxController;
     [SerializeField] private PlayerAnimator playerAnimator;
-    
-    [Header("Game Input")]
     [SerializeField] private GameInput gameInput;
-
-    [Header("Layer Selection")]
     [SerializeField] private LayerMask objectLayerMask;
 
     private bool canAct = true;
@@ -30,6 +22,12 @@ public class PlayerController : MonoBehaviour
     private Collider2D playerCollider;
     public Vector2 FacingDirection { get; private set; }
     public bool IsWalking { get; private set; }
+
+    public event EventHandler<OnTriggerActionEventArgs> OnTriggerAction;
+    public class OnTriggerActionEventArgs : EventArgs {
+        public string action;
+        public Vector2 direction;
+    }
 
     private void Awake() {
         rigidBody = GetComponent<Rigidbody2D>();
@@ -42,6 +40,7 @@ public class PlayerController : MonoBehaviour
         gameInput.OnPushAction += GameInput_OnPushAction;
         gameInput.OnAttackAction += GameInput_OnAttackAction;
         healthController.OnDamage += HealthController_OnDamage;
+        playerAnimator.OnFinishActing += PlayerAnimator_OnFinishActing;
     }
 
     private void FixedUpdate() {
@@ -60,12 +59,13 @@ public class PlayerController : MonoBehaviour
         gameInput.OnPushAction -= GameInput_OnPushAction;
         gameInput.OnAttackAction -= GameInput_OnAttackAction;
         healthController.OnDamage -= HealthController_OnDamage;
+        playerAnimator.OnFinishActing -= PlayerAnimator_OnFinishActing;
     }
 
     private void GameInput_OnPushAction(object sender, EventArgs e) {
         if (canAct) {
             canAct = false;
-            playerAnimator.TriggerAction(PUSH);
+            TriggerActionEvent(PUSH);
             Vector2 startPosition = playerCollider.ClosestPoint((Vector2) gameObject.transform.position + FacingDirection);
             RaycastHit2D raycastHit = Physics2D.Raycast(startPosition, FacingDirection, pushDetectionDistance, objectLayerMask);
             
@@ -79,27 +79,30 @@ public class PlayerController : MonoBehaviour
     private void GameInput_OnAttackAction(object sender, EventArgs e) {
         if (canAct) {
             canAct = false;
-            hitboxController.SetAction(ATTACK, FacingDirection);
-            playerAnimator.TriggerAction(ATTACK);
+            TriggerActionEvent(ATTACK);
         }
     }
 
     private void HealthController_OnDamage(object sender, EventArgs e) {
         if (healthController.Health <= 0) {
-            playerAnimator.TriggerAction(DEATH);
+            TriggerActionEvent(DEATH);
             canAct = false;
         } else {
             StartCoroutine(TemporaryActionDisableCo());
         }
     }
 
-    private IEnumerator TemporaryActionDisableCo() {
-        canAct = false;
-        yield return new WaitForSeconds(0.1f);
+    private void PlayerAnimator_OnFinishActing(object sender, EventArgs e) {
         canAct = true;
     }
 
-    public void FinishActing() {
+    private void TriggerActionEvent(string action) {
+        OnTriggerAction?.Invoke(this, new OnTriggerActionEventArgs{ action = action, direction = FacingDirection });
+    }
+
+    private IEnumerator TemporaryActionDisableCo() {
+        canAct = false;
+        yield return new WaitForSeconds(0.1f);
         canAct = true;
     }
 }
