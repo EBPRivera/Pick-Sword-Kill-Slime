@@ -5,15 +5,14 @@ using UnityEngine;
 
 public class SlimeAnimator : MonoBehaviour
 {
-    private string DAMAGED = "Damaged";
-    private string DEATH = "Death";
-    private string IS_MOVING = "IsMoving";
+    private const string IS_MOVING = "IsMoving";
 
-    [SerializeField] private HealthController healthController;
-    [SerializeField] private SlimeController slimeController;
+    [SerializeField] private Slime slime;
     private SpriteRenderer sprite;
     private Animator animator;
-    private bool isBlinking;
+
+    public event EventHandler OnDeath;
+    public event EventHandler OnVulnerableTrigger;
 
     private void Awake() {
         sprite = GetComponent<SpriteRenderer>();
@@ -21,50 +20,29 @@ public class SlimeAnimator : MonoBehaviour
     }
 
     private void Start() {
-        healthController.OnInvulnerableTrigger += HealthController_OnInvulnerableTrigger;
-        healthController.OnVulnerableTrigger += HealthController_OnVulnerableTrigger;
-        healthController.OnDamage += HealthController_OnDamage;
+        slime.OnHit += Slime_OnHit;
     }
 
-    private void FixedUpdate() {
-        if (slimeController.FacingDirection.x < 0) {
-            sprite.flipX = true;
-        } else {
-            sprite.flipX = false;
-        }
 
-        animator.SetBool(IS_MOVING, slimeController.IsMoving);
+    private void FixedUpdate() {
+        sprite.flipX = slime.FacingDirection.x < 0;
+        animator.SetBool(IS_MOVING, slime.IsMoving);
     }
 
     private void OnDestroy() {
-        healthController.OnInvulnerableTrigger -= HealthController_OnInvulnerableTrigger;
-        healthController.OnVulnerableTrigger -= HealthController_OnVulnerableTrigger;
-        healthController.OnDamage -= HealthController_OnDamage;
+        slime.OnHit -= Slime_OnHit;
     }
 
-    private void HealthController_OnInvulnerableTrigger(object sender, EventArgs e) {
-        isBlinking = true;
-        StartCoroutine(BlinkingCo());
+    private void Slime_OnHit(object sender, Slime.OnHitEventArgs e) {
+        animator.SetTrigger(e.trigger);
+
     }
 
-    private void HealthController_OnVulnerableTrigger(object sender, EventArgs e) {
-        isBlinking = false;
+    private void OnDeathKeyframeEvent() {
+        OnDeath?.Invoke(this, EventArgs.Empty);
     }
 
-    private void HealthController_OnDamage(object sender, EventArgs e) {
-        if (healthController.Health <= 0) {
-            animator.SetTrigger(DEATH);
-        }
-
-        animator.SetTrigger(DAMAGED);
-    }
-
-    private IEnumerator BlinkingCo() {
-        while (isBlinking) {
-            sprite.enabled = false;
-            yield return new WaitForSeconds(0.2f);
-            sprite.enabled = true;
-            yield return new WaitForSeconds(0.2f);
-        }
+    private void OnVulnerableTriggerKeyframeEvent() {
+        OnVulnerableTrigger?.Invoke(this, EventArgs.Empty);
     }
 }

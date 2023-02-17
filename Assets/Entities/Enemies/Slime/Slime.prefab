@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 7816552798605540447}
   - component: {fileID: 2787400147377607367}
   - component: {fileID: 68707937612794714}
-  - component: {fileID: 7021077609761376187}
   m_Layer: 0
   m_Name: SlimeSprite
   m_TagString: Untagged
@@ -119,20 +118,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d6ce180bf62c1e479b5918cf84c1f48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthController: {fileID: 4439310445090602112}
-  slimeController: {fileID: 4611846016150711424}
---- !u!114 &7021077609761376187
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1169387127950306257}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bcd03e0d459edbc4bb6ace26d5936446, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  slime: {fileID: 5784354698525106220}
 --- !u!1 &1332409962656132538
 GameObject:
   m_ObjectHideFlags: 0
@@ -190,8 +176,7 @@ GameObject:
   - component: {fileID: 2484074686208311186}
   - component: {fileID: 1190849305669214904}
   - component: {fileID: 3349894525516441548}
-  - component: {fileID: 4611846016150711424}
-  - component: {fileID: 4439310445090602112}
+  - component: {fileID: 5784354698525106220}
   m_Layer: 0
   m_Name: Slime
   m_TagString: Enemy
@@ -263,7 +248,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.44, y: 0.344}
   m_EdgeRadius: 0
---- !u!114 &4611846016150711424
+--- !u!114 &5784354698525106220
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -272,21 +257,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 8315100380460515478}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47f2e012a5a1ac3428df1d73b35a0756, type: 3}
+  m_Script: {fileID: 11500000, guid: 4b401126bbd301f4a80d0b05cb11cb55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   entitySO: {fileID: 11400000, guid: f12de4b9751385a4bbc66e779c42dab7, type: 2}
-  detector: {fileID: 7111390296594190940}
---- !u!114 &4439310445090602112
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8315100380460515478}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dee779e7a25fcd4488b7fcbea3901565, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
   damageableSO: {fileID: 11400000, guid: adbab167d7c044d4bba89d9f1a929df6, type: 2}
+  detector: {fileID: 7111390296594190940}
+  slimeAnimator: {fileID: 68707937612794714}
