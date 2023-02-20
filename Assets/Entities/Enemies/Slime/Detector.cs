@@ -17,15 +17,11 @@ public class Detector : MonoBehaviour {
 
     private void FixedUpdate() {
         Collider2D targetCollider = Physics2D.OverlapCircle(entity.position, detectionRadius, detectionLayerMask);
-        targetCollider.gameObject.TryGetComponent<Player>(out Player player);
 
-        if (targetCollider != null && player != null && player.IsAlive()) {
-            float distanceFromTarget = Vector2.Distance(transform.position, targetCollider.transform.position);
-            Vector2 directionToTarget = (Vector2) (targetCollider.transform.position - transform.position).normalized;
+        if (targetCollider != null) {
+            targetCollider.transform.TryGetComponent<Player>(out Player player);
 
-            RaycastHit2D raycastHit = Physics2D.Raycast(transform.position, directionToTarget, distanceFromTarget);
-
-            if (raycastHit.transform == targetCollider.transform) {
+            if (!IsObstacle(targetCollider.transform) && player != null && player.IsAlive()) {
                 SetDetected(targetCollider.transform);
             } else {
                 SetDetected();
@@ -33,6 +29,15 @@ public class Detector : MonoBehaviour {
         } else {
             SetDetected();
         }
+    }
+
+    private bool IsObstacle(Transform target) {
+        float distanceFromTarget = Vector2.Distance(transform.position, target.position);
+        Vector2 directionToTarget = (Vector2) (target.position - transform.position).normalized;
+
+        RaycastHit2D raycastHit = Physics2D.Raycast(transform.position, directionToTarget, distanceFromTarget);
+
+        return raycastHit.transform != target;
     }
 
     private void SetDetected(Transform target = null) {

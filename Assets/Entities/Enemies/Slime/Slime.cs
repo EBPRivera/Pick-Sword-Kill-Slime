@@ -52,8 +52,8 @@ public class Slime : MonoBehaviour, IDamageable {
 
     private void OnCollisionStay2D(Collision2D other) {
         if (health > 0) {
-            other.gameObject.TryGetComponent<Player>(out Player player);
-            player?.TakeDamage(entitySO.damage, (Vector2) (other.transform.position - gameObject.transform.position).normalized * entitySO.knockbackForce);
+            other.transform.TryGetComponent<Player>(out Player player);
+            player?.TakeDamage(entitySO.damage, (Vector2) (other.transform.position - transform.position).normalized * entitySO.knockbackForce);
         }
     }
 
