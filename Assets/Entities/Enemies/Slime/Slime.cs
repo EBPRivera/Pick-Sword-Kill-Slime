@@ -52,7 +52,7 @@ public class Slime : MonoBehaviour, IDamageable
         slimeAnimator.OnDeath -= SlimeAnimator_OnDeath;
     }
 
-    private void OnCollisionEnter2D(Collision2D other) {
+    private void OnCollisionStay2D(Collision2D other) {
         if (other.gameObject.tag == PLAYER && health > 0) {
             IDamageable damageableObject = other.gameObject.GetComponent<IDamageable>();
 
