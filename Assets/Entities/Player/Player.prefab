@@ -194,7 +194,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 5163117851882644092}
-  healthController: {fileID: 0}
 --- !u!1 &6408704650633283079
 GameObject:
   m_ObjectHideFlags: 0
@@ -207,7 +206,7 @@ GameObject:
   - component: {fileID: 671452553053359782}
   - component: {fileID: 4592686101221250576}
   - component: {fileID: 5163117851882644092}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -289,8 +288,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b95a591e4b22be84cb97bc9ab2c98373, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageableSO: {fileID: 11400000, guid: ea1132bb475fab343852b6c7c8fdbbc9, type: 2}
   entitySO: {fileID: 11400000, guid: ee965828f22307c409640e70ac4ca083, type: 2}
+  damageableSO: {fileID: 11400000, guid: ea1132bb475fab343852b6c7c8fdbbc9, type: 2}
   playerAnimator: {fileID: 4542332939134492858}
   gameInput: {fileID: 0}
   objectLayerMask:

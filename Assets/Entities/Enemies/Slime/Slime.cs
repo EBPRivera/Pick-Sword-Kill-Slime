@@ -3,9 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Slime : MonoBehaviour, IDamageable
-{
-    private const string PLAYER = "Player";
+public class Slime : MonoBehaviour, IDamageable {
     private const string DEATH = "Death";
     private const string DAMAGED = "Damaged";
 
@@ -38,7 +36,7 @@ public class Slime : MonoBehaviour, IDamageable
 
     private void FixedUpdate() {
         if (detector.Detected && canMove) {
-            Vector2 direction = (Vector2) (detector.DetectedEntity.transform.position - gameObject.transform.position).normalized;
+            Vector2 direction = (Vector2) (detector.DetectedEntity.position - transform.position).normalized;
             rigidBody.velocity = Vector2.ClampMagnitude(rigidBody.velocity + (direction * entitySO.movementSpeed * Time.fixedDeltaTime), entitySO.maxSpeed);
             IsMoving = true;
             FacingDirection = direction;
@@ -52,13 +50,10 @@ public class Slime : MonoBehaviour, IDamageable
         slimeAnimator.OnDeath -= SlimeAnimator_OnDeath;
     }
 
-    private void OnCollisionEnter2D(Collision2D other) {
-        if (other.gameObject.tag == PLAYER && health > 0) {
-            IDamageable damageableObject = other.gameObject.GetComponent<IDamageable>();
-
-            if (damageableObject != null) {
-                damageableObject.TakeDamage(entitySO.damage, (Vector2) (other.transform.position - gameObject.transform.position).normalized * entitySO.knockbackForce);
-            }
+    private void OnCollisionStay2D(Collision2D other) {
+        if (health > 0) {
+            other.transform.TryGetComponent<Player>(out Player player);
+            player?.TakeDamage(entitySO.damage, (Vector2) (other.transform.position - transform.position).normalized * entitySO.knockbackForce);
         }
     }
 

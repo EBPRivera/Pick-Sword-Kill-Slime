@@ -137,4 +137,8 @@ public class Player : MonoBehaviour, IDamageable
         yield return new WaitForSeconds(0.1f);
         canAct = true;
     }
+
+    public bool IsAlive() {
+        return health > 0;
+    }
 }

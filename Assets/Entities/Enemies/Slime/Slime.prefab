@@ -164,7 +164,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   detectionRadius: 3
-  target: {fileID: 0}
+  detectionLayerMask:
+    serializedVersion: 2
+    m_Bits: 128
+  entity: {fileID: 2484074686208311186}
 --- !u!1 &8315100380460515478
 GameObject:
   m_ObjectHideFlags: 0
@@ -264,3 +267,6 @@ MonoBehaviour:
   damageableSO: {fileID: 11400000, guid: adbab167d7c044d4bba89d9f1a929df6, type: 2}
   detector: {fileID: 7111390296594190940}
   slimeAnimator: {fileID: 68707937612794714}
+  damageableLayerMask:
+    serializedVersion: 2
+    m_Bits: 128
