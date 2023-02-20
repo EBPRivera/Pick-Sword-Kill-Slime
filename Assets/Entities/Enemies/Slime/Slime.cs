@@ -3,9 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Slime : MonoBehaviour, IDamageable
-{
-    private const string PLAYER = "Player";
+public class Slime : MonoBehaviour, IDamageable {
     private const string DEATH = "Death";
     private const string DAMAGED = "Damaged";
 
@@ -53,12 +51,9 @@ public class Slime : MonoBehaviour, IDamageable
     }
 
     private void OnCollisionStay2D(Collision2D other) {
-        if (other.gameObject.tag == PLAYER && health > 0) {
-            IDamageable damageableObject = other.gameObject.GetComponent<IDamageable>();
-
-            if (damageableObject != null) {
-                damageableObject.TakeDamage(entitySO.damage, (Vector2) (other.transform.position - gameObject.transform.position).normalized * entitySO.knockbackForce);
-            }
+        if (health > 0) {
+            other.gameObject.TryGetComponent<Player>(out Player player);
+            player?.TakeDamage(entitySO.damage, (Vector2) (other.transform.position - gameObject.transform.position).normalized * entitySO.knockbackForce);
         }
     }
 
