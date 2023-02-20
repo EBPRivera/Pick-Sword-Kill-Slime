@@ -38,7 +38,7 @@ public class Slime : MonoBehaviour, IDamageable
 
     private void FixedUpdate() {
         if (detector.Detected && canMove) {
-            Vector2 direction = (Vector2) (detector.DetectedEntity.transform.position - gameObject.transform.position).normalized;
+            Vector2 direction = (Vector2) (detector.DetectedEntity.position - transform.position).normalized;
             rigidBody.velocity = Vector2.ClampMagnitude(rigidBody.velocity + (direction * entitySO.movementSpeed * Time.fixedDeltaTime), entitySO.maxSpeed);
             IsMoving = true;
             FacingDirection = direction;
