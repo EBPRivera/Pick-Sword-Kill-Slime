@@ -17,8 +17,9 @@ public class Detector : MonoBehaviour {
 
     private void FixedUpdate() {
         Collider2D targetCollider = Physics2D.OverlapCircle(entity.position, detectionRadius, detectionLayerMask);
+        targetCollider.gameObject.TryGetComponent<Player>(out Player player);
 
-        if (targetCollider != null) {
+        if (targetCollider != null && player != null && player.IsAlive()) {
             float distanceFromTarget = Vector2.Distance(transform.position, targetCollider.transform.position);
             Vector2 directionToTarget = (Vector2) (targetCollider.transform.position - transform.position).normalized;
 
