@@ -10,6 +10,8 @@ public class Player : MonoBehaviour, IDamageable
     private const string ATTACK = "Attack";
     private const string DEATH = "Death";
 
+    public static Player Instance;
+
     [SerializeField] private EntitySO entitySO;
     [SerializeField] private DamageableSO damageableSO;
     [SerializeField] private PlayerAnimator playerAnimator;
@@ -26,6 +28,7 @@ public class Player : MonoBehaviour, IDamageable
     public bool IsWalking { get; private set; }
 
     public event EventHandler<OnTriggerActionEventArgs> OnTriggerAction;
+    public event EventHandler OnDeath;
     public event EventHandler<OnInvulnerableToggleEventArgs> OnInvulnerableToggle;
     public class OnTriggerActionEventArgs : EventArgs {
         public string action;
@@ -37,6 +40,8 @@ public class Player : MonoBehaviour, IDamageable
     }
 
     private void Awake() {
+        Instance = this;
+
         health = damageableSO.health;
         isInvulnerable = false;
         rigidBody = GetComponent<Rigidbody2D>();
@@ -48,6 +53,7 @@ public class Player : MonoBehaviour, IDamageable
         gameInput.OnPushAction += GameInput_OnPushAction;
         gameInput.OnAttackAction += GameInput_OnAttackAction;
         playerAnimator.OnFinishActing += PlayerAnimator_OnFinishActing;
+        playerAnimator.OnDeath += PlayerAnimator_OnDeath;
     }
 
     private void FixedUpdate() {
@@ -91,6 +97,10 @@ public class Player : MonoBehaviour, IDamageable
 
     private void PlayerAnimator_OnFinishActing(object sender, EventArgs e) {
         canAct = true;
+    }
+
+    private void PlayerAnimator_OnDeath(object sender, EventArgs e) {
+        OnDeath?.Invoke(this, EventArgs.Empty);
     }
 
     public void TakeDamage(float damage, Vector2 knockback) {

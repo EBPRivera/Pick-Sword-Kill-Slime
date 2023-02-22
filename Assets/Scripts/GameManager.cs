@@ -15,35 +15,53 @@ public class GameManager : MonoBehaviour {
 
     private State state;
 
+    public event EventHandler OnStateChanged;
+
     private void Awake() {
         Instance = this;
-        state = State.Pause;
+        PauseGame();
     }
 
     private void Start() {
-        GameInput.Instance.OnPauseToggle += GameInput_OnPausetoggle;
+        GameInput.Instance.OnPauseToggle += GameInput_OnPauseToggle;
+        Player.Instance.OnDeath += Player_OnDeath;
     }
 
-    private void Update() {
-        switch(state) {
-            case State.GamePlay:
-                break;
-            case State.Pause:
-                break;
-            case State.GameOver:
-                break;
-        }
+    private void OnDestroy() {
+        GameInput.Instance.OnPauseToggle -= GameInput_OnPauseToggle;
+        Player.Instance.OnDeath -= Player_OnDeath;
     }
 
-    private void GameInput_OnPausetoggle(object sender, EventArgs e) {
+    private void GameInput_OnPauseToggle(object sender, EventArgs e) {
         if (state == State.Pause) {
             state = State.GamePlay;
+            Time.timeScale = 1f;
+            OnStateChanged?.Invoke(this, EventArgs.Empty);
         } else if (state == State.GamePlay) {
-            state = State.Pause;
+            PauseGame();
+            OnStateChanged?.Invoke(this, EventArgs.Empty);
         }
+    }
+
+    private void Player_OnDeath(object sender, EventArgs e) {
+        state = State.GameOver;
+        OnStateChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void PauseGame() {
+        state = State.Pause;
+        Time.timeScale = 0f;
     }
 
     public bool IsPlayable() {
         return state == State.GamePlay;
+    }
+
+    public bool IsPaused() {
+        return state == State.Pause;
+    }
+
+    public bool IsGameOver() {
+        return state == State.GameOver;
     }
 }
