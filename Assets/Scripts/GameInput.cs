@@ -4,19 +4,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class GameInput : MonoBehaviour
-{
+public class GameInput : MonoBehaviour {
+    public static GameInput Instance { get; private set; }
+
     public event EventHandler OnPushAction;
     public event EventHandler OnAttackAction;
+    public event EventHandler OnPauseToggle;
 
     private PlayerInputActions playerInputActions;
 
     public void Awake() {
+        Instance = this;
+
         playerInputActions = new PlayerInputActions();
         playerInputActions.Player.Enable();
 
         playerInputActions.Player.Push.performed += Push_performed;
         playerInputActions.Player.Attack.performed += Attack_performed;
+        playerInputActions.Player.Pause.performed += Pause_perfromed;
     }
 
     public void OnDestory() {
@@ -32,10 +37,18 @@ public class GameInput : MonoBehaviour
     }
 
     private void Push_performed(InputAction.CallbackContext obj) {
+        if (!GameManager.Instance.IsPlayable()) return;
+
         OnPushAction?.Invoke(this, EventArgs.Empty);
     }
 
     private void Attack_performed(InputAction.CallbackContext obj){
+        if (!GameManager.Instance.IsPlayable()) return;
+
         OnAttackAction?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void Pause_perfromed(InputAction.CallbackContext obj) {
+        OnPauseToggle?.Invoke(this, EventArgs.Empty);
     }
 }
