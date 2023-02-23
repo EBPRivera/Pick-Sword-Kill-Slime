@@ -3,11 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SlimeAnimator : MonoBehaviour
+public class EnemyAnimator : MonoBehaviour
 {
     private const string IS_MOVING = "IsMoving";
 
-    [SerializeField] private Slime slime;
+    [SerializeField] private Enemy enemy;
     private SpriteRenderer sprite;
     private Animator animator;
 
@@ -20,20 +20,20 @@ public class SlimeAnimator : MonoBehaviour
     }
 
     private void Start() {
-        slime.OnHit += Slime_OnHit;
+        enemy.OnHit += Enemy_OnHit;
     }
 
 
     private void FixedUpdate() {
-        sprite.flipX = slime.FacingDirection.x < 0;
-        animator.SetBool(IS_MOVING, slime.IsMoving);
+        sprite.flipX = enemy.FacingDirection.x < 0;
+        animator.SetBool(IS_MOVING, enemy.IsMoving);
     }
 
     private void OnDestroy() {
-        slime.OnHit -= Slime_OnHit;
+        enemy.OnHit -= Enemy_OnHit;
     }
 
-    private void Slime_OnHit(object sender, Slime.OnHitEventArgs e) {
+    private void Enemy_OnHit(object sender, Enemy.OnHitEventArgs e) {
         animator.SetTrigger(e.trigger);
 
     }

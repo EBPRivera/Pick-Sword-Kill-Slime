@@ -13,7 +13,6 @@ public class Player : MonoBehaviour, IDamageable
     public static Player Instance;
 
     [SerializeField] private EntitySO entitySO;
-    [SerializeField] private DamageableSO damageableSO;
     [SerializeField] private PlayerAnimator playerAnimator;
     [SerializeField] private GameInput gameInput;
     [SerializeField] private LayerMask objectLayerMask;
@@ -22,6 +21,7 @@ public class Player : MonoBehaviour, IDamageable
     private bool isInvulnerable;
     private bool canAct = true;
     private float pushDetectionDistance = 0.2f;
+    private float invulnerableTimer = 1f;
     private Rigidbody2D rigidBody;
     private Collider2D playerCollider;
     public Vector2 FacingDirection { get; private set; }
@@ -42,7 +42,7 @@ public class Player : MonoBehaviour, IDamageable
     private void Awake() {
         Instance = this;
 
-        health = damageableSO.health;
+        health = entitySO.health;
         isInvulnerable = false;
         rigidBody = GetComponent<Rigidbody2D>();
         FacingDirection = Vector2.right;
@@ -60,7 +60,7 @@ public class Player : MonoBehaviour, IDamageable
         Vector2 inputDirection = gameInput.GetMovementVectorNormalized();
 
         if (inputDirection != Vector2.zero && canAct) {
-            rigidBody.velocity = Vector2.ClampMagnitude(rigidBody.velocity + (inputDirection * entitySO.movementSpeed * Time.fixedDeltaTime), entitySO.maxSpeed);
+            rigidBody.velocity = rigidBody.velocity + (inputDirection * entitySO.movementSpeed * Time.fixedDeltaTime);
             FacingDirection = inputDirection;
             IsWalking = true;
         } else {
@@ -104,14 +104,6 @@ public class Player : MonoBehaviour, IDamageable
     }
 
     public void TakeDamage(float damage, Vector2 knockback) {
-        HandleDamagedBehaviour(damage, knockback);
-    }
-
-    public void TakeDamage(float damage) {
-        HandleDamagedBehaviour(damage, Vector2.zero);
-    }
-
-    private void HandleDamagedBehaviour(float damage, Vector2 knockback) {
         if (!isInvulnerable) {
             health -= damage;
             rigidBody.AddForce(knockback, ForceMode2D.Impulse);
@@ -125,7 +117,6 @@ public class Player : MonoBehaviour, IDamageable
                 StartCoroutine(TemporaryActionDisableCo());
             }
         }
-
     }
 
     private void TriggerActionEvent(string action) {
@@ -133,10 +124,10 @@ public class Player : MonoBehaviour, IDamageable
     }
 
     private IEnumerator InvulnerableStateCo() {
-        if (damageableSO.invulnerableTimer > 0) {
+        if (invulnerableTimer > 0) {
             isInvulnerable = true;
             OnInvulnerableToggle?.Invoke(this, new OnInvulnerableToggleEventArgs{ isInvulnerable = true, health = health });
-            yield return new WaitForSeconds(damageableSO.invulnerableTimer);
+            yield return new WaitForSeconds(invulnerableTimer);
             isInvulnerable = false;
             OnInvulnerableToggle?.Invoke(this, new OnInvulnerableToggleEventArgs{ isInvulnerable = false, health = health });
         }
@@ -150,5 +141,9 @@ public class Player : MonoBehaviour, IDamageable
 
     public bool IsAlive() {
         return health > 0;
+    }
+
+    public EntitySO GetEntitySO() {
+        return entitySO;
     }
 }

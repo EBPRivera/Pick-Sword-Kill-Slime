@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6419266195757908764}
   - component: {fileID: 5647622097960857286}
   - component: {fileID: 9126663967418844619}
-  - component: {fileID: 4482508981956165344}
+  - component: {fileID: 5282227514191798126}
   m_Layer: 6
   m_Name: Crate
   m_TagString: PushableObject
@@ -134,7 +134,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &4482508981956165344
+--- !u!114 &5282227514191798126
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -143,7 +143,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3501124313987060372}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91d0d6373a4c2c14fb5f7b5e20042ef7, type: 3}
+  m_Script: {fileID: 11500000, guid: 2809d9bf85ca8ee4ea41fbeb2ffabd05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   contactFilter:

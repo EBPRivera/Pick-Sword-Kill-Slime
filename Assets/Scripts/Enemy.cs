@@ -3,14 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Slime : MonoBehaviour, IDamageable {
+public class Enemy : MonoBehaviour, IDamageable {
     private const string DEATH = "Death";
     private const string DAMAGED = "Damaged";
 
     [SerializeField] private EntitySO entitySO;
-    [SerializeField] private DamageableSO damageableSO;
     [SerializeField] private Detector detector;
-    [SerializeField] private SlimeAnimator slimeAnimator;
+    [SerializeField] private EnemyAnimator enemyAnimator;
 
     public bool IsMoving { get; private set; }
     public Vector2 FacingDirection { get; private set; }
@@ -25,19 +24,19 @@ public class Slime : MonoBehaviour, IDamageable {
     }
 
     private void Awake() {
-        health = damageableSO.health;
+        health = entitySO.health;
         rigidBody = GetComponent<Rigidbody2D>();
     }
 
     private void Start() {
-        slimeAnimator.OnVulnerableTrigger += SlimeAnimator_OnVulnerabletrigger;
-        slimeAnimator.OnDeath += SlimeAnimator_OnDeath;
+        enemyAnimator.OnVulnerableTrigger += EnemyAnimator_OnVulnerabletrigger;
+        enemyAnimator.OnDeath += EnemyAnimator_OnDeath;
     }
 
     private void FixedUpdate() {
         if (detector.Detected && canMove) {
             Vector2 direction = (Vector2) (detector.DetectedEntity.position - transform.position).normalized;
-            rigidBody.velocity = Vector2.ClampMagnitude(rigidBody.velocity + (direction * entitySO.movementSpeed * Time.fixedDeltaTime), entitySO.maxSpeed);
+            rigidBody.velocity = rigidBody.velocity + (direction * entitySO.movementSpeed * Time.fixedDeltaTime);
             IsMoving = true;
             FacingDirection = direction;
         } else {
@@ -46,8 +45,8 @@ public class Slime : MonoBehaviour, IDamageable {
     }
 
     private void OnDestroy() {
-        slimeAnimator.OnVulnerableTrigger -= SlimeAnimator_OnVulnerabletrigger;
-        slimeAnimator.OnDeath -= SlimeAnimator_OnDeath;
+        enemyAnimator.OnVulnerableTrigger -= EnemyAnimator_OnVulnerabletrigger;
+        enemyAnimator.OnDeath -= EnemyAnimator_OnDeath;
     }
 
     private void OnCollisionStay2D(Collision2D other) {
@@ -57,23 +56,15 @@ public class Slime : MonoBehaviour, IDamageable {
         }
     }
 
-    private void SlimeAnimator_OnVulnerabletrigger(object sender, EventArgs e) {
+    private void EnemyAnimator_OnVulnerabletrigger(object sender, EventArgs e) {
         isInvulnerable = false;
     }
 
-    private void SlimeAnimator_OnDeath(object sender, EventArgs e) {
+    private void EnemyAnimator_OnDeath(object sender, EventArgs e) {
         Destroy(gameObject);
     }
 
     public void TakeDamage(float damage, Vector2 knockback) {
-        HandleDamagedBehaviour(damage, knockback);
-    }
-
-    public void TakeDamage(float damage) {
-        HandleDamagedBehaviour(damage, Vector2.zero);
-    }
-
-    private void HandleDamagedBehaviour(float damage, Vector2 knockback) {
         if (!isInvulnerable) {
             health -= damage;
             isInvulnerable = true;

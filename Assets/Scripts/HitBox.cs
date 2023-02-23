@@ -3,13 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HitboxController : MonoBehaviour
+public class HitBox : MonoBehaviour
 {
     private const string ENEMY = "Enemy";
 
     [SerializeField] private Player player;
-    [SerializeField] private float swordDamage = 2f;
-    [SerializeField] private float knockbackForce = 50f;
 
     private BoxCollider2D boxCollider;
     private Vector2 defaultHorizontalHitPos = new Vector2(0.35f, 0.11f);
@@ -49,9 +47,9 @@ public class HitboxController : MonoBehaviour
 
                 Vector2 direction = (Vector2) (enemyPosition - playerPosition).normalized;
 
-                Vector2 knockback = direction * knockbackForce;
+                Vector2 knockback = direction * player.GetEntitySO().knockbackForce;
 
-                damageableObject.TakeDamage(swordDamage, knockback);
+                damageableObject.TakeDamage(player.GetEntitySO().damage, knockback);
             } else {
                 Debug.LogWarning("Other object does not implement IDamageable interface");
             }

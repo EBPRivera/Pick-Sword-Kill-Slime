@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PushableObjectController : MonoBehaviour, IPushable
+public class PushableObject : MonoBehaviour, IPushable
 {
     private const float DEFAULT_DISTANCE = 1f;
 
@@ -10,7 +10,6 @@ public class PushableObjectController : MonoBehaviour, IPushable
     
     private float speed = 3;
     private bool canMove = true;
-    private Vector2 moveDirection = new Vector2(0, 0);
     private Vector3 destination;
     private Rigidbody2D rigidBody;
     private List<RaycastHit2D> collidedObjects = new List<RaycastHit2D>();
