@@ -17,6 +17,7 @@ public class Enemy : MonoBehaviour, IDamageable {
     private bool isInvulnerable;
     private bool canMove = true;
     private Rigidbody2D rigidBody;
+    private Collider2D enemyCollider;
 
     public event EventHandler<OnHitEventArgs> OnHit;
     public class OnHitEventArgs : EventArgs {
@@ -26,6 +27,7 @@ public class Enemy : MonoBehaviour, IDamageable {
     private void Awake() {
         health = entitySO.health;
         rigidBody = GetComponent<Rigidbody2D>();
+        enemyCollider = GetComponent<Collider2D>();
     }
 
     private void Start() {
@@ -84,6 +86,28 @@ public class Enemy : MonoBehaviour, IDamageable {
         canMove = false;
         yield return new WaitForSeconds(0.1f);
         canMove = true;
+    }
+
+    private Vector2 GetColliderSize() {
+        return enemyCollider.bounds.size;
+    }
+
+    public static Enemy SpawnEnemy(EntitySO enemySO, Vector2 position, Transform parent = null) {
+        Transform enemyTransform = Instantiate(enemySO.prefab, parent);
+
+        Enemy enemy = enemyTransform.GetComponent<Enemy>();
+        float colliderSizeMagnitude = enemy.GetColliderSize().magnitude;
+        float spawnRadius = colliderSizeMagnitude + colliderSizeMagnitude * 0.01f;
+
+        Collider2D overlap = Physics2D.OverlapCircle(position, spawnRadius);
+
+        if (overlap == null) {
+            enemyTransform.position = position;
+            return enemy;
+        } else {
+            Destroy(enemyTransform.gameObject);
+            return null;
+        }
     }
 
 }
