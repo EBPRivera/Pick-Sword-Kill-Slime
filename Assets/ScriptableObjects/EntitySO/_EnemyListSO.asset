@@ -9,12 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bcf89afe87302624f9911c201193c3d0, type: 3}
-  m_Name: Slime
+  m_Script: {fileID: 11500000, guid: 5f3c32636a00c144ab71fc70c4672318, type: 3}
+  m_Name: _EnemyListSO
   m_EditorClassIdentifier: 
-  prefab: {fileID: 2484074686208311186, guid: 9018bd2c5a42f384ca9e27431ef0b324, type: 3}
-  health: 3
-  damage: 2
-  knockbackForce: 50
-  movementSpeed: 100
-  entityName: Slime
+  entitySOList:
+  - {fileID: 11400000, guid: f12de4b9751385a4bbc66e779c42dab7, type: 2}
