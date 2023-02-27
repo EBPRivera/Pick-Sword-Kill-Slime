@@ -13,7 +13,7 @@ public class GameInput : MonoBehaviour {
 
     private PlayerInputActions playerInputActions;
 
-    public void Awake() {
+    private void Awake() {
         Instance = this;
 
         playerInputActions = new PlayerInputActions();
@@ -21,12 +21,15 @@ public class GameInput : MonoBehaviour {
 
         playerInputActions.Player.Push.performed += Push_performed;
         playerInputActions.Player.Attack.performed += Attack_performed;
-        playerInputActions.Player.Pause.performed += Pause_perfromed;
+        playerInputActions.Player.Pause.performed += Pause_performed;
     }
 
-    public void OnDestory() {
+    private void OnDestroy() {
         playerInputActions.Player.Push.performed -= Push_performed;
         playerInputActions.Player.Attack.performed -= Attack_performed;
+        playerInputActions.Player.Pause.performed -= Pause_performed;
+
+        playerInputActions.Dispose();
     }
 
     public Vector2 GetMovementVectorNormalized() {
@@ -48,7 +51,7 @@ public class GameInput : MonoBehaviour {
         OnAttackAction?.Invoke(this, EventArgs.Empty);
     }
 
-    private void Pause_perfromed(InputAction.CallbackContext obj) {
+    private void Pause_performed(InputAction.CallbackContext obj) {
         OnPauseToggle?.Invoke(this, EventArgs.Empty);
     }
 }
