@@ -16,10 +16,13 @@ public class GameManager : MonoBehaviour {
     private State state;
 
     public event EventHandler OnStateChanged;
+    public event EventHandler OnPause;
+    public event EventHandler OnUnpause;
+    public event EventHandler OnGameOver;
 
     private void Awake() {
         Instance = this;
-        PauseGame();
+        state = State.GamePlay;
     }
 
     private void Start() {
@@ -33,24 +36,27 @@ public class GameManager : MonoBehaviour {
     }
 
     private void GameInput_OnPauseToggle(object sender, EventArgs e) {
-        if (state == State.Pause) {
-            state = State.GamePlay;
-            Time.timeScale = 1f;
-            OnStateChanged?.Invoke(this, EventArgs.Empty);
-        } else if (state == State.GamePlay) {
-            PauseGame();
-            OnStateChanged?.Invoke(this, EventArgs.Empty);
-        }
+        TogglePause();
     }
 
     private void Player_OnDeath(object sender, EventArgs e) {
         state = State.GameOver;
         OnStateChanged?.Invoke(this, EventArgs.Empty);
+        OnGameOver?.Invoke(this, EventArgs.Empty);
     }
 
-    private void PauseGame() {
-        state = State.Pause;
-        Time.timeScale = 0f;
+    public void TogglePause() {
+        if (state == State.Pause) {
+            state = State.GamePlay;
+            Time.timeScale = 1f;
+            OnStateChanged?.Invoke(this, EventArgs.Empty);
+            OnUnpause?.Invoke(this, EventArgs.Empty);
+        } else if (state == State.GamePlay) {
+            state = State.Pause;
+            Time.timeScale = 0f;
+            OnStateChanged?.Invoke(this, EventArgs.Empty);
+            OnPause?.Invoke(this, EventArgs.Empty);
+        }
     }
 
     public bool IsPlayable() {
