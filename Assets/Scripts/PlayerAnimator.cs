@@ -29,13 +29,9 @@ public class PlayerAnimator : MonoBehaviour
     }
 
     private void FixedUpdate() {
-        Vector2 facingDirection = player.FacingDirection;
-        
         animator.SetBool(IS_WALKING, player.IsWalking);
-        animator.SetFloat(HORIZONTAL_DIRECTION, facingDirection.x);
-        animator.SetFloat(VERTICAL_DIRECTION, facingDirection.y);
-
-        sprite.flipX = facingDirection.x < 0;
+        animator.SetFloat(HORIZONTAL_DIRECTION, player.FacingDirection.x);
+        animator.SetFloat(VERTICAL_DIRECTION, player.FacingDirection.y);
     }
 
     private void OnDestroy() {
@@ -68,11 +64,11 @@ public class PlayerAnimator : MonoBehaviour
         sprite.enabled = true;
     }
 
-    public void OnFinishActingKeyframeEvent() {
+    private void OnFinishActingKeyframeEvent() {
         OnFinishActing?.Invoke(this, EventArgs.Empty);
     }
 
-    public void OnDeathKeyframeEvent() {
+    private void OnDeathKeyframeEvent() {
         OnDeath?.Invoke(this, EventArgs.Empty);
     }
 }

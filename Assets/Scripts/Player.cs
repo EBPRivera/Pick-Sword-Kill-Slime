@@ -22,6 +22,7 @@ public class Player : MonoBehaviour, IDamageable
     private bool canAct = true;
     private float pushDetectionDistance = 0.2f;
     private float invulnerableTimer = 1f;
+    private Vector3 leftFacingLocalScale = new Vector3(-1, 1, 1);
     private Rigidbody2D rigidBody;
     private Collider2D playerCollider;
     public Vector2 FacingDirection { get; private set; }
@@ -32,7 +33,6 @@ public class Player : MonoBehaviour, IDamageable
     public event EventHandler<OnInvulnerableToggleEventArgs> OnInvulnerableToggle;
     public class OnTriggerActionEventArgs : EventArgs {
         public string action;
-        public Vector2 direction;
     }
     public class OnInvulnerableToggleEventArgs : EventArgs {
         public bool isInvulnerable;
@@ -62,6 +62,7 @@ public class Player : MonoBehaviour, IDamageable
         if (inputDirection != Vector2.zero && canAct) {
             rigidBody.velocity = rigidBody.velocity + (inputDirection * entitySO.movementSpeed * Time.fixedDeltaTime);
             FacingDirection = inputDirection;
+            HandleHorizontalFlip();
             IsWalking = true;
         } else {
             IsWalking = false;
@@ -72,6 +73,7 @@ public class Player : MonoBehaviour, IDamageable
         gameInput.OnPushAction -= GameInput_OnPushAction;
         gameInput.OnAttackAction -= GameInput_OnAttackAction;
         playerAnimator.OnFinishActing -= PlayerAnimator_OnFinishActing;
+        playerAnimator.OnDeath -= PlayerAnimator_OnDeath;
     }
 
     private void GameInput_OnPushAction(object sender, EventArgs e) {
@@ -120,7 +122,17 @@ public class Player : MonoBehaviour, IDamageable
     }
 
     private void TriggerActionEvent(string action) {
-        OnTriggerAction?.Invoke(this, new OnTriggerActionEventArgs{ action = action, direction = FacingDirection });
+        OnTriggerAction?.Invoke(this, new OnTriggerActionEventArgs{ action = action });
+    }
+
+    private void HandleHorizontalFlip() {
+        if (transform.localScale.x < 0 && FacingDirection.x >= 0) {
+            // Face right when player is facing left
+            transform.localScale = Vector3.one;
+        } else if (transform.localScale.x > 0 && FacingDirection.x < 0) {
+            // Face left when player is facing right
+            transform.localScale = leftFacingLocalScale;
+        }
     }
 
     private IEnumerator InvulnerableStateCo() {
