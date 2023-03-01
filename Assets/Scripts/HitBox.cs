@@ -10,34 +10,14 @@ public class HitBox : MonoBehaviour
     [SerializeField] private Player player;
 
     private BoxCollider2D boxCollider;
-    private Vector2 defaultHorizontalHitPos = new Vector2(0.35f, 0.11f);
-    private Vector2 defaultVerticalHitPos = new Vector2(0, -0.015f);
-    private Vector2 hitSize = new Vector2(0.42f, 0.48f);
+    private Vector2 defaultHorizontalHitPosition;
 
-    // Start is called before the first frame update
     private void Awake() {
         boxCollider = GetComponent<BoxCollider2D>();
+        defaultHorizontalHitPosition = transform.localPosition;
     }
 
-    private void Start() {
-        player.OnTriggerAction += Player_OnTriggerAction;
-    }
-
-    private void OnDestroy() {
-        player.OnTriggerAction -= Player_OnTriggerAction;
-    }
-
-    private void Player_OnTriggerAction(object sender, Player.OnTriggerActionEventArgs e) {
-        if (e.direction.x != 0) {
-            boxCollider.offset = e.direction.x > 0 ? defaultHorizontalHitPos : new Vector2(-defaultHorizontalHitPos.x, defaultHorizontalHitPos.y);
-            boxCollider.size = hitSize;
-        } else {
-            boxCollider.offset = e.direction.y < 0 ? defaultVerticalHitPos : new Vector2(defaultVerticalHitPos.x, defaultVerticalHitPos.y + 0.391f);
-            boxCollider.size = new Vector2(hitSize.y, hitSize.x);
-        }
-    }
-
-    void OnTriggerEnter2D(Collider2D other) {
+    private void OnTriggerEnter2D(Collider2D other) {
         if (other.tag == ENEMY) {
             IDamageable damageableObject = other.GetComponent<IDamageable>();
 

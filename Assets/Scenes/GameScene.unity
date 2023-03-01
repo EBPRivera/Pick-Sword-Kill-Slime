@@ -703,6 +703,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1291458401120534321, guid: bee72c77e03170841b725b2a90c38eb9, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1291458401120534321, guid: bee72c77e03170841b725b2a90c38eb9, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -742,10 +746,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2123748906404865999, guid: bee72c77e03170841b725b2a90c38eb9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -3.06
+      objectReference: {fileID: 0}
+    - target: {fileID: 2123748906404865999, guid: bee72c77e03170841b725b2a90c38eb9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2123748906404865999, guid: bee72c77e03170841b725b2a90c38eb9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -3.82
+      objectReference: {fileID: 0}
     - target: {fileID: 5163117851882644092, guid: bee72c77e03170841b725b2a90c38eb9, type: 3}
       propertyPath: gameInput
       value: 
       objectReference: {fileID: 230737188}
+    - target: {fileID: 5959684701461336937, guid: bee72c77e03170841b725b2a90c38eb9, type: 3}
+      propertyPath: m_FlipX
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6408704650633283079, guid: bee72c77e03170841b725b2a90c38eb9, type: 3}
       propertyPath: m_Name
       value: Player
