@@ -43,3 +43,6 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Pickable Objects
+    uniqueID: 811066965
+    locked: 0

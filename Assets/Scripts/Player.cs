@@ -22,6 +22,7 @@ public class Player : MonoBehaviour, IDamageable
     private bool canAct = true;
     private float pushDetectionDistance = 0.2f;
     private float invulnerableTimer = 1f;
+    private int swordCount = 0;
     private Vector3 leftFacingLocalScale = new Vector3(-1, 1, 1);
     private Rigidbody2D rigidBody;
     private Collider2D playerCollider;
@@ -91,9 +92,10 @@ public class Player : MonoBehaviour, IDamageable
     }
 
     private void GameInput_OnAttackAction(object sender, EventArgs e) {
-        if (canAct) {
+        if (canAct && swordCount > 0) {
             canAct = false;
             TriggerActionEvent(ATTACK);
+            swordCount--;
         }
     }
 
@@ -157,5 +159,13 @@ public class Player : MonoBehaviour, IDamageable
 
     public EntitySO GetEntitySO() {
         return entitySO;
+    }
+
+    public int GetSwordCount() {
+        return swordCount;
+    }
+
+    public void SetSwordCount(int swordCount) {
+        this.swordCount = swordCount;
     }
 }
