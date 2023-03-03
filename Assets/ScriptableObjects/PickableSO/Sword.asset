@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62155e27a6401fc4897de51366e874cb, type: 3}
   m_Name: Sword
   m_EditorClassIdentifier: 
-  prefab: {fileID: 3475925325394430931, guid: f2173d261bbe226449fb8f5f60b7c9e4, type: 3}
+  prefab: {fileID: 4637834972552232640, guid: a7632954ca9f31b4e951a73d528875bb, type: 3}
   sprite: {fileID: 857881979, guid: 21f6ee5da833e2f42b0a716eb8facb04, type: 3}
   pickableObjectName: Sword
