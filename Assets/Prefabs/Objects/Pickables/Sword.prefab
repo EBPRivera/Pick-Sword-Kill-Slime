@@ -72,6 +72,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ad6d2668156c234b814d9669af1f592, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pickableSO: {fileID: 11400000, guid: 6becdf6dc03367e468dfdf697a193bd2, type: 2}
 --- !u!1 &600016424029247916
 GameObject:
   m_ObjectHideFlags: 0

@@ -16,13 +16,15 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private PlayerAnimator playerAnimator;
     [SerializeField] private GameInput gameInput;
     [SerializeField] private LayerMask objectLayerMask;
+    [SerializeField] private PickableListSO pickableWeapons;
 
     private float health;
     private bool isInvulnerable;
     private bool canAct = true;
     private float pushDetectionDistance = 0.2f;
     private float invulnerableTimer = 1f;
-    private int swordCount = 0;
+    private string currentAttackAction;
+    private Dictionary<string, int> attackCountDictionary = new Dictionary<string, int>();
     private Vector3 leftFacingLocalScale = new Vector3(-1, 1, 1);
     private Rigidbody2D rigidBody;
     private Collider2D playerCollider;
@@ -32,6 +34,7 @@ public class Player : MonoBehaviour, IDamageable
     public event EventHandler<OnTriggerActionEventArgs> OnTriggerAction;
     public event EventHandler OnDeath;
     public event EventHandler<OnInvulnerableToggleEventArgs> OnInvulnerableToggle;
+    public event EventHandler OnWeaponPickup;
     public class OnTriggerActionEventArgs : EventArgs {
         public string action;
     }
@@ -48,6 +51,13 @@ public class Player : MonoBehaviour, IDamageable
         rigidBody = GetComponent<Rigidbody2D>();
         FacingDirection = Vector2.right;
         playerCollider = GetComponent<Collider2D>();
+
+        foreach (PickableSO pickableWeapon in pickableWeapons.pickableSOList) {
+            attackCountDictionary.Add(pickableWeapon.pickableObjectName, 0);
+            if (currentAttackAction == null) {
+                currentAttackAction = pickableWeapon.pickableObjectName;
+            }
+        }
     }
 
     private void Start() {
@@ -92,10 +102,10 @@ public class Player : MonoBehaviour, IDamageable
     }
 
     private void GameInput_OnAttackAction(object sender, EventArgs e) {
-        if (canAct && swordCount > 0) {
+        if (canAct && attackCountDictionary[currentAttackAction] > 0) {
             canAct = false;
             TriggerActionEvent(ATTACK);
-            swordCount--;
+            attackCountDictionary[currentAttackAction]--;
         }
     }
 
@@ -161,11 +171,14 @@ public class Player : MonoBehaviour, IDamageable
         return entitySO;
     }
 
-    public int GetSwordCount() {
-        return swordCount;
-    }
-
-    public void SetSwordCount(int swordCount) {
-        this.swordCount = swordCount;
+    public void ItemPickup(PickableSO pickedObject) {
+        // Check if picked object is a weapon
+        foreach (PickableSO pickableWeapon in pickableWeapons.pickableSOList) {
+            if (pickedObject == pickableWeapon) {
+                attackCountDictionary[pickableWeapon.pickableObjectName]++;
+                OnWeaponPickup?.Invoke(this, EventArgs.Empty);
+                break;
+            }
+        }
     }
 }
