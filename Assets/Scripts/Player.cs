@@ -30,16 +30,15 @@ public class Player : MonoBehaviour, IDamageable
     public Vector2 FacingDirection { get; private set; }
     public bool IsWalking { get; private set; }
 
-    public event EventHandler<OnTriggerActionEventArgs> OnTriggerAction;
+    public event EventHandler OnAttackAction;
+    public event EventHandler OnPushAction;
     public event EventHandler OnDeath;
+    public event EventHandler OnGameOver;
     public event EventHandler<OnInvulnerableToggleEventArgs> OnInvulnerableToggle;
     public event EventHandler<OnWeaponPickupEventArgs> OnWeaponPickup;
     public class OnWeaponPickupEventArgs: EventArgs {
         public PickableSO pickedWeapon;
         public int weaponCount;
-    }
-    public class OnTriggerActionEventArgs : EventArgs {
-        public string action;
     }
     public class OnInvulnerableToggleEventArgs : EventArgs {
         public bool isInvulnerable;
@@ -92,7 +91,8 @@ public class Player : MonoBehaviour, IDamageable
     private void GameInput_OnPushAction(object sender, EventArgs e) {
         if (canAct) {
             canAct = false;
-            TriggerActionEvent(PUSH);
+            OnPushAction?.Invoke(this, EventArgs.Empty);
+            // TriggerActionEvent(PUSH);
             Vector2 startPosition = playerCollider.ClosestPoint((Vector2) gameObject.transform.position + FacingDirection);
             RaycastHit2D raycastHit = Physics2D.Raycast(startPosition, FacingDirection, pushDetectionDistance, objectLayerMask);
             
@@ -106,7 +106,8 @@ public class Player : MonoBehaviour, IDamageable
     private void GameInput_OnAttackAction(object sender, EventArgs e) {
         if (canAct && attackCountDictionary[currentAttackAction] > 0) {
             canAct = false;
-            TriggerActionEvent(ATTACK);
+            OnAttackAction?.Invoke(this, EventArgs.Empty);
+            // TriggerActionEvent(ATTACK);
             attackCountDictionary[currentAttackAction]--;
         }
     }
@@ -116,7 +117,7 @@ public class Player : MonoBehaviour, IDamageable
     }
 
     private void PlayerAnimator_OnDeath(object sender, EventArgs e) {
-        OnDeath?.Invoke(this, EventArgs.Empty);
+        OnGameOver?.Invoke(this, EventArgs.Empty);
     }
 
     public void TakeDamage(float damage, Vector2 knockback) {
@@ -127,16 +128,13 @@ public class Player : MonoBehaviour, IDamageable
             if (health <= 0) {
                 canAct = false;
                 isInvulnerable = true;
-                TriggerActionEvent(DEATH);
+                OnDeath?.Invoke(this, EventArgs.Empty);
+                // TriggerActionEvent(DEATH);
             } else {
                 StartCoroutine(InvulnerableStateCo());
                 StartCoroutine(TemporaryActionDisableCo());
             }
         }
-    }
-
-    private void TriggerActionEvent(string action) {
-        OnTriggerAction?.Invoke(this, new OnTriggerActionEventArgs{ action = action });
     }
 
     private IEnumerator InvulnerableStateCo() {

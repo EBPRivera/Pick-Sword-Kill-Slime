@@ -27,19 +27,19 @@ public class GameManager : MonoBehaviour {
 
     private void Start() {
         GameInput.Instance.OnPauseToggle += GameInput_OnPauseToggle;
-        Player.Instance.OnDeath += Player_OnDeath;
+        Player.Instance.OnGameOver += Player_OnGameOver;
     }
 
     private void OnDestroy() {
         GameInput.Instance.OnPauseToggle -= GameInput_OnPauseToggle;
-        Player.Instance.OnDeath -= Player_OnDeath;
+        Player.Instance.OnGameOver -= Player_OnGameOver;
     }
 
     private void GameInput_OnPauseToggle(object sender, EventArgs e) {
         TogglePause();
     }
 
-    private void Player_OnDeath(object sender, EventArgs e) {
+    private void Player_OnGameOver(object sender, EventArgs e) {
         state = State.GameOver;
         OnStateChanged?.Invoke(this, EventArgs.Empty);
         OnGameOver?.Invoke(this, EventArgs.Empty);

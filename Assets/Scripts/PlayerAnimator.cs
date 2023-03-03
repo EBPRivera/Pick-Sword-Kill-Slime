@@ -8,6 +8,9 @@ public class PlayerAnimator : MonoBehaviour
     private const string IS_WALKING = "IsWalking";
     private const string HORIZONTAL_DIRECTION = "HorizontalDirection";
     private const string VERTICAL_DIRECTION = "VerticalDirection";
+    private const string ATTACK = "Attack";
+    private const string PUSH = "Push";
+    private const string DEATH = "Death";
 
     [SerializeField] private Player player;
 
@@ -26,7 +29,9 @@ public class PlayerAnimator : MonoBehaviour
 
     private void Start() {
         player.OnInvulnerableToggle += Player_OnInvulnerableToggle;
-        player.OnTriggerAction += Player_OnTriggerAction;
+        player.OnAttackAction += Player_OnAttackAction;
+        player.OnPushAction += Player_OnPushAction;
+        player.OnDeath += Player_OnDeath;
     }
 
     private void FixedUpdate() {
@@ -49,7 +54,9 @@ public class PlayerAnimator : MonoBehaviour
 
     private void OnDestroy() {
         player.OnInvulnerableToggle -= Player_OnInvulnerableToggle;
-        player.OnTriggerAction -= Player_OnTriggerAction;
+        player.OnAttackAction -= Player_OnAttackAction;
+        player.OnPushAction -= Player_OnPushAction;
+        player.OnDeath -= Player_OnDeath;
     }
 
     private void Player_OnInvulnerableToggle(object sender, Player.OnInvulnerableToggleEventArgs e) {
@@ -63,8 +70,16 @@ public class PlayerAnimator : MonoBehaviour
         }
     }
 
-    private void Player_OnTriggerAction(object sender, Player.OnTriggerActionEventArgs e) {
-        animator.SetTrigger(e.action);
+    private void Player_OnPushAction(object sender, EventArgs e) {
+        animator.SetTrigger(PUSH);
+    }
+
+    private void Player_OnAttackAction(object sender, EventArgs e) {
+        animator.SetTrigger(ATTACK);
+    }
+
+    private void Player_OnDeath(object sender, EventArgs e) {
+        animator.SetTrigger(DEATH);
     }
 
     private IEnumerator BlinkingCo() {
