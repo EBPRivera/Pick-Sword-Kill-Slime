@@ -14,6 +14,7 @@ public class PlayerAnimator : MonoBehaviour
     private Animator animator;
     private SpriteRenderer sprite;
     private bool isBlinking = false;
+    private Vector3 leftFacingLocalScale = new Vector3(-1, 1, 1);
 
     public event EventHandler OnFinishActing;
     public event EventHandler OnDeath;
@@ -32,6 +33,18 @@ public class PlayerAnimator : MonoBehaviour
         animator.SetBool(IS_WALKING, player.IsWalking);
         animator.SetFloat(HORIZONTAL_DIRECTION, player.FacingDirection.x);
         animator.SetFloat(VERTICAL_DIRECTION, player.FacingDirection.y);
+
+        HandleHorizontalFlip();
+    }
+
+    private void HandleHorizontalFlip() {
+        if (transform.localScale.x < 0 && player.FacingDirection.x >= 0) {
+            // Face right when player is facing left
+            transform.localScale = Vector3.one;
+        } else if (transform.localScale.x > 0 && player.FacingDirection.x < 0) {
+            // Face left when player is facing right
+            transform.localScale = leftFacingLocalScale;
+        }
     }
 
     private void OnDestroy() {

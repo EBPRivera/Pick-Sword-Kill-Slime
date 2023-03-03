@@ -25,7 +25,6 @@ public class Player : MonoBehaviour, IDamageable
     private float invulnerableTimer = 1f;
     private string currentAttackAction;
     private Dictionary<string, int> attackCountDictionary = new Dictionary<string, int>();
-    private Vector3 leftFacingLocalScale = new Vector3(-1, 1, 1);
     private Rigidbody2D rigidBody;
     private Collider2D playerCollider;
     public Vector2 FacingDirection { get; private set; }
@@ -34,7 +33,11 @@ public class Player : MonoBehaviour, IDamageable
     public event EventHandler<OnTriggerActionEventArgs> OnTriggerAction;
     public event EventHandler OnDeath;
     public event EventHandler<OnInvulnerableToggleEventArgs> OnInvulnerableToggle;
-    public event EventHandler OnWeaponPickup;
+    public event EventHandler<OnWeaponPickupEventArgs> OnWeaponPickup;
+    public class OnWeaponPickupEventArgs: EventArgs {
+        public PickableSO pickedWeapon;
+        public int weaponCount;
+    }
     public class OnTriggerActionEventArgs : EventArgs {
         public string action;
     }
@@ -73,7 +76,6 @@ public class Player : MonoBehaviour, IDamageable
         if (inputDirection != Vector2.zero && canAct) {
             rigidBody.velocity = rigidBody.velocity + (inputDirection * entitySO.movementSpeed * Time.fixedDeltaTime);
             FacingDirection = inputDirection;
-            HandleHorizontalFlip();
             IsWalking = true;
         } else {
             IsWalking = false;
@@ -137,16 +139,6 @@ public class Player : MonoBehaviour, IDamageable
         OnTriggerAction?.Invoke(this, new OnTriggerActionEventArgs{ action = action });
     }
 
-    private void HandleHorizontalFlip() {
-        if (transform.localScale.x < 0 && FacingDirection.x >= 0) {
-            // Face right when player is facing left
-            transform.localScale = Vector3.one;
-        } else if (transform.localScale.x > 0 && FacingDirection.x < 0) {
-            // Face left when player is facing right
-            transform.localScale = leftFacingLocalScale;
-        }
-    }
-
     private IEnumerator InvulnerableStateCo() {
         if (invulnerableTimer > 0) {
             isInvulnerable = true;
@@ -176,7 +168,10 @@ public class Player : MonoBehaviour, IDamageable
         foreach (PickableSO pickableWeapon in pickableWeapons.pickableSOList) {
             if (pickedObject == pickableWeapon) {
                 attackCountDictionary[pickableWeapon.pickableObjectName]++;
-                OnWeaponPickup?.Invoke(this, EventArgs.Empty);
+                OnWeaponPickup?.Invoke(this, new OnWeaponPickupEventArgs{
+                    pickedWeapon = pickedObject,
+                    weaponCount = attackCountDictionary[pickableWeapon.pickableObjectName]
+                });
                 break;
             }
         }
