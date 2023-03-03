@@ -23,17 +23,17 @@ public class Player : MonoBehaviour, IDamageable
     private bool canAct = true;
     private float pushDetectionDistance = 0.2f;
     private float invulnerableTimer = 1f;
-    private string currentAttackAction;
-    private Dictionary<string, int> attackCountDictionary = new Dictionary<string, int>();
+    private PickableSO currentAttackAction;
+    private Dictionary<PickableSO, int> attackCountDictionary = new Dictionary<PickableSO, int>();
     private Rigidbody2D rigidBody;
     private Collider2D playerCollider;
     public Vector2 FacingDirection { get; private set; }
     public bool IsWalking { get; private set; }
 
-    public event EventHandler OnAttackAction;
     public event EventHandler OnPushAction;
     public event EventHandler OnDeath;
     public event EventHandler OnGameOver;
+    public event EventHandler<OnAttackActionEventArgs> OnAttackAction;
     public event EventHandler<OnInvulnerableToggleEventArgs> OnInvulnerableToggle;
     public event EventHandler<OnWeaponPickupEventArgs> OnWeaponPickup;
     public class OnWeaponPickupEventArgs: EventArgs {
@@ -43,6 +43,10 @@ public class Player : MonoBehaviour, IDamageable
     public class OnInvulnerableToggleEventArgs : EventArgs {
         public bool isInvulnerable;
         public float health;
+    }
+    public class OnAttackActionEventArgs: EventArgs {
+        public PickableSO weapon;
+        public int weaponCount;
     }
 
     private void Awake() {
@@ -55,9 +59,9 @@ public class Player : MonoBehaviour, IDamageable
         playerCollider = GetComponent<Collider2D>();
 
         foreach (PickableSO pickableWeapon in pickableWeapons.pickableSOList) {
-            attackCountDictionary.Add(pickableWeapon.pickableObjectName, 0);
+            attackCountDictionary.Add(pickableWeapon, 0);
             if (currentAttackAction == null) {
-                currentAttackAction = pickableWeapon.pickableObjectName;
+                currentAttackAction = pickableWeapon;
             }
         }
     }
@@ -92,7 +96,6 @@ public class Player : MonoBehaviour, IDamageable
         if (canAct) {
             canAct = false;
             OnPushAction?.Invoke(this, EventArgs.Empty);
-            // TriggerActionEvent(PUSH);
             Vector2 startPosition = playerCollider.ClosestPoint((Vector2) gameObject.transform.position + FacingDirection);
             RaycastHit2D raycastHit = Physics2D.Raycast(startPosition, FacingDirection, pushDetectionDistance, objectLayerMask);
             
@@ -106,9 +109,11 @@ public class Player : MonoBehaviour, IDamageable
     private void GameInput_OnAttackAction(object sender, EventArgs e) {
         if (canAct && attackCountDictionary[currentAttackAction] > 0) {
             canAct = false;
-            OnAttackAction?.Invoke(this, EventArgs.Empty);
-            // TriggerActionEvent(ATTACK);
             attackCountDictionary[currentAttackAction]--;
+            OnAttackAction?.Invoke(this, new OnAttackActionEventArgs {
+                weapon = currentAttackAction,
+                weaponCount = attackCountDictionary[currentAttackAction]
+            });
         }
     }
 
@@ -129,7 +134,6 @@ public class Player : MonoBehaviour, IDamageable
                 canAct = false;
                 isInvulnerable = true;
                 OnDeath?.Invoke(this, EventArgs.Empty);
-                // TriggerActionEvent(DEATH);
             } else {
                 StartCoroutine(InvulnerableStateCo());
                 StartCoroutine(TemporaryActionDisableCo());
@@ -161,14 +165,18 @@ public class Player : MonoBehaviour, IDamageable
         return entitySO;
     }
 
+    public PickableListSO GetPickableWeapons() {
+        return pickableWeapons;
+    }
+
     public void ItemPickup(PickableSO pickedObject) {
         // Check if picked object is a weapon
         foreach (PickableSO pickableWeapon in pickableWeapons.pickableSOList) {
             if (pickedObject == pickableWeapon) {
-                attackCountDictionary[pickableWeapon.pickableObjectName]++;
+                attackCountDictionary[pickableWeapon]++;
                 OnWeaponPickup?.Invoke(this, new OnWeaponPickupEventArgs{
                     pickedWeapon = pickedObject,
-                    weaponCount = attackCountDictionary[pickableWeapon.pickableObjectName]
+                    weaponCount = attackCountDictionary[pickableWeapon]
                 });
                 break;
             }
