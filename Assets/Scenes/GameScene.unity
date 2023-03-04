@@ -336,6 +336,8 @@ MonoBehaviour:
   pickableListSO: {fileID: 11400000, guid: 7e2eb4d2d73bdad4db8acb2ad667c80b, type: 2}
   width: 16
   height: 6
+  pickableObjectCountMax: 4
+  pickableObjectSpawnTimerMax: 3
   gizmoColor: {r: 0, g: 0.8357128, b: 0.8490566, a: 1}
 --- !u!1 &447370343
 GameObject:
