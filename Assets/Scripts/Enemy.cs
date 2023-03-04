@@ -99,9 +99,10 @@ public class Enemy : MonoBehaviour, IDamageable {
         float colliderSizeMagnitude = enemy.GetColliderSize().magnitude;
         float spawnRadius = colliderSizeMagnitude + colliderSizeMagnitude * 0.01f;
 
-        Collider2D overlap = Physics2D.OverlapCircle(position, spawnRadius);
+        List<Collider2D> colliderList = new List<Collider2D>();
+        int overlapCount = Physics2D.OverlapCircle(position, spawnRadius, new ContactFilter2D { useTriggers = false }, colliderList);
 
-        if (overlap == null) {
+        if (overlapCount == 0) {
             enemyTransform.position = position;
             return enemy;
         } else {
