@@ -336,8 +336,8 @@ MonoBehaviour:
   pickableListSO: {fileID: 11400000, guid: 7e2eb4d2d73bdad4db8acb2ad667c80b, type: 2}
   width: 16
   height: 6
-  pickableObjectCountMax: 4
-  pickableObjectSpawnTimerMax: 3
+  objectCountMax: 4
+  spawnTimerMax: 3
   gizmoColor: {r: 0, g: 0.8357128, b: 0.8490566, a: 1}
 --- !u!1 &447370343
 GameObject:
@@ -654,7 +654,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -7.5}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -1566,7 +1566,7 @@ MonoBehaviour:
   width: 16
   height: 6
   enemyCountMax: 5
-  enemySpawnTimerMax: 4
+  spawnTimerMax: 4
   gizmoColor: {r: 1, g: 0.6286203, b: 0.0990566, a: 1}
 --- !u!1 &1204319417
 GameObject:
@@ -2789,46 +2789,31 @@ CompositeCollider2D:
   - m_Collider: {fileID: 1210954553}
     m_ColliderPaths:
     - - X: 90000000
-        Y: 45000000
-      - X: 89375000
-        Y: 45625000
-      - X: -89375000
         Y: 45625000
       - X: -90000000
-        Y: 45000000
+        Y: 45625000
       - X: -90000000
         Y: -50000000
       - X: 90000000
         Y: -50000000
-    - - X: -80000000
+    - - X: -83125000
         Y: -34375000
-      - X: -80000000
-        Y: -33750000
-      - X: -83125000
-        Y: -30000000
       - X: -83125000
         Y: 30000000
       - X: 83125000
         Y: 30000000
       - X: 83125000
-        Y: -30000000
-      - X: 80000000
         Y: -34375000
   m_CompositePaths:
     m_Paths:
     - - {x: 8.99997, y: -5}
-      - {x: 8.999992, y: 4.5000076}
-      - {x: 8.9374895, y: 4.5625}
-      - {x: -8.937508, y: 4.5624924}
-      - {x: -9, y: 4.499989}
+      - {x: 8.99997, y: 4.5625}
+      - {x: -9, y: 4.562471}
       - {x: -8.99997, y: -5}
-    - - {x: 8.000008, y: -3.4374888}
-      - {x: -8, y: -3.4374704}
-      - {x: -8.000007, y: -3.3749928}
-      - {x: -8.3125, y: -2.999991}
+    - - {x: 8.3125, y: -3.4374704}
+      - {x: -8.3125, y: -3.4374704}
       - {x: -8.31247, y: 3}
       - {x: 8.3125, y: 2.9999707}
-      - {x: 8.312495, y: -3.0000064}
   m_VertexDistance: 0.0005
   m_OffsetDistance: 0.00005
 --- !u!50 &1210954557
@@ -3082,7 +3067,7 @@ MonoBehaviour:
   m_TargetMovementOnly: 1
   m_ScreenX: 0.5
   m_ScreenY: 0.5
-  m_CameraDistance: 7.5
+  m_CameraDistance: 10
   m_DeadZoneWidth: 0
   m_DeadZoneHeight: 0
   m_DeadZoneDepth: 0
@@ -3178,7 +3163,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1511249461}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -7.5}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
