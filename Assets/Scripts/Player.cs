@@ -16,27 +16,37 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private PlayerAnimator playerAnimator;
     [SerializeField] private GameInput gameInput;
     [SerializeField] private LayerMask objectLayerMask;
+    [SerializeField] private PickableListSO pickableWeapons;
 
     private float health;
     private bool isInvulnerable;
     private bool canAct = true;
     private float pushDetectionDistance = 0.2f;
     private float invulnerableTimer = 1f;
-    private Vector3 leftFacingLocalScale = new Vector3(-1, 1, 1);
+    private PickableSO currentAttackAction;
+    private Dictionary<PickableSO, int> attackCountDictionary = new Dictionary<PickableSO, int>();
     private Rigidbody2D rigidBody;
     private Collider2D playerCollider;
     public Vector2 FacingDirection { get; private set; }
     public bool IsWalking { get; private set; }
 
-    public event EventHandler<OnTriggerActionEventArgs> OnTriggerAction;
+    public event EventHandler OnPushAction;
     public event EventHandler OnDeath;
+    public event EventHandler OnGameOver;
+    public event EventHandler<OnAttackActionEventArgs> OnAttackAction;
     public event EventHandler<OnInvulnerableToggleEventArgs> OnInvulnerableToggle;
-    public class OnTriggerActionEventArgs : EventArgs {
-        public string action;
+    public event EventHandler<OnWeaponPickupEventArgs> OnWeaponPickup;
+    public class OnWeaponPickupEventArgs: EventArgs {
+        public PickableSO pickedWeapon;
+        public int weaponCount;
     }
     public class OnInvulnerableToggleEventArgs : EventArgs {
         public bool isInvulnerable;
         public float health;
+    }
+    public class OnAttackActionEventArgs: EventArgs {
+        public PickableSO weapon;
+        public int weaponCount;
     }
 
     private void Awake() {
@@ -47,6 +57,13 @@ public class Player : MonoBehaviour, IDamageable
         rigidBody = GetComponent<Rigidbody2D>();
         FacingDirection = Vector2.right;
         playerCollider = GetComponent<Collider2D>();
+
+        foreach (PickableSO pickableWeapon in pickableWeapons.pickableSOList) {
+            attackCountDictionary.Add(pickableWeapon, 0);
+            if (currentAttackAction == null) {
+                currentAttackAction = pickableWeapon;
+            }
+        }
     }
 
     private void Start() {
@@ -62,7 +79,6 @@ public class Player : MonoBehaviour, IDamageable
         if (inputDirection != Vector2.zero && canAct) {
             rigidBody.velocity = rigidBody.velocity + (inputDirection * entitySO.movementSpeed * Time.fixedDeltaTime);
             FacingDirection = inputDirection;
-            HandleHorizontalFlip();
             IsWalking = true;
         } else {
             IsWalking = false;
@@ -79,7 +95,7 @@ public class Player : MonoBehaviour, IDamageable
     private void GameInput_OnPushAction(object sender, EventArgs e) {
         if (canAct) {
             canAct = false;
-            TriggerActionEvent(PUSH);
+            OnPushAction?.Invoke(this, EventArgs.Empty);
             Vector2 startPosition = playerCollider.ClosestPoint((Vector2) gameObject.transform.position + FacingDirection);
             RaycastHit2D raycastHit = Physics2D.Raycast(startPosition, FacingDirection, pushDetectionDistance, objectLayerMask);
             
@@ -91,9 +107,13 @@ public class Player : MonoBehaviour, IDamageable
     }
 
     private void GameInput_OnAttackAction(object sender, EventArgs e) {
-        if (canAct) {
+        if (canAct && attackCountDictionary[currentAttackAction] > 0) {
             canAct = false;
-            TriggerActionEvent(ATTACK);
+            attackCountDictionary[currentAttackAction]--;
+            OnAttackAction?.Invoke(this, new OnAttackActionEventArgs {
+                weapon = currentAttackAction,
+                weaponCount = attackCountDictionary[currentAttackAction]
+            });
         }
     }
 
@@ -102,7 +122,7 @@ public class Player : MonoBehaviour, IDamageable
     }
 
     private void PlayerAnimator_OnDeath(object sender, EventArgs e) {
-        OnDeath?.Invoke(this, EventArgs.Empty);
+        OnGameOver?.Invoke(this, EventArgs.Empty);
     }
 
     public void TakeDamage(float damage, Vector2 knockback) {
@@ -113,25 +133,11 @@ public class Player : MonoBehaviour, IDamageable
             if (health <= 0) {
                 canAct = false;
                 isInvulnerable = true;
-                TriggerActionEvent(DEATH);
+                OnDeath?.Invoke(this, EventArgs.Empty);
             } else {
                 StartCoroutine(InvulnerableStateCo());
                 StartCoroutine(TemporaryActionDisableCo());
             }
-        }
-    }
-
-    private void TriggerActionEvent(string action) {
-        OnTriggerAction?.Invoke(this, new OnTriggerActionEventArgs{ action = action });
-    }
-
-    private void HandleHorizontalFlip() {
-        if (transform.localScale.x < 0 && FacingDirection.x >= 0) {
-            // Face right when player is facing left
-            transform.localScale = Vector3.one;
-        } else if (transform.localScale.x > 0 && FacingDirection.x < 0) {
-            // Face left when player is facing right
-            transform.localScale = leftFacingLocalScale;
         }
     }
 
@@ -157,5 +163,23 @@ public class Player : MonoBehaviour, IDamageable
 
     public EntitySO GetEntitySO() {
         return entitySO;
+    }
+
+    public PickableListSO GetPickableWeapons() {
+        return pickableWeapons;
+    }
+
+    public void ItemPickup(PickableSO pickedObject) {
+        // Check if picked object is a weapon
+        foreach (PickableSO pickableWeapon in pickableWeapons.pickableSOList) {
+            if (pickedObject == pickableWeapon) {
+                attackCountDictionary[pickableWeapon]++;
+                OnWeaponPickup?.Invoke(this, new OnWeaponPickupEventArgs{
+                    pickedWeapon = pickedObject,
+                    weaponCount = attackCountDictionary[pickableWeapon]
+                });
+                break;
+            }
+        }
     }
 }
