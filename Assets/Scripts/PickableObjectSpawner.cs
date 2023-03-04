@@ -20,7 +20,6 @@ public class PickableObjectSpawner : MonoBehaviour {
             spawnTimer += Time.deltaTime;
 
             if (spawnTimer > spawnTimerMax) {
-                // Add an object within the bounded box
                 PickableSO pickableObjectToSpawn = pickableListSO.pickableSOList[UnityEngine.Random.Range(0, pickableListSO.pickableSOList.Count)];
                 SpawnPickableObject(pickableObjectToSpawn);
             }
