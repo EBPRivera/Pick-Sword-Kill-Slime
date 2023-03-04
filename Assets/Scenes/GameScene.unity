@@ -313,7 +313,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 313686775}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: -0.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1540,8 +1540,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1116997196}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1561,8 +1561,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entityListSO: {fileID: 11400000, guid: 44f18a2818bd6e249bc4bbf3925477ac, type: 2}
-  spawnRadius: 3
-  gizmoColor: {r: 0.3662891, g: 0.7169812, b: 0.32128873, a: 1}
+  width: 16
+  height: 6
+  enemyCountMax: 5
+  enemySpawnTimerMax: 4
+  gizmoColor: {r: 1, g: 0.6286203, b: 0.0990566, a: 1}
 --- !u!1 &1204319417
 GameObject:
   m_ObjectHideFlags: 0
