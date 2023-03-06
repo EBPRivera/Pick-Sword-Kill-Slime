@@ -719,6 +719,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   pickableWeapons: {fileID: 11400000, guid: 7e2eb4d2d73bdad4db8acb2ad667c80b, type: 2}
+  pickableHealingItems: {fileID: 11400000, guid: 9c070f0909000a544b34dcc60e93b1e1, type: 2}
 --- !u!1 &7444611591228596693
 GameObject:
   m_ObjectHideFlags: 0

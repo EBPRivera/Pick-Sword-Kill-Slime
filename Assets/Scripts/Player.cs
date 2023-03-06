@@ -12,7 +12,10 @@ public class Player : MonoBehaviour, IDamageable {
     [SerializeField] private PlayerAnimator playerAnimator;
     [SerializeField] private GameInput gameInput;
     [SerializeField] private LayerMask objectLayerMask;
+
+    [Header("Pickable Objects")]
     [SerializeField] private PickableListSO pickableWeapons;
+    [SerializeField] private PickableListSO pickableHealingItems;
 
     private float health;
     private float maxHealth;
@@ -90,6 +93,15 @@ public class Player : MonoBehaviour, IDamageable {
         gameInput.OnAttackAction -= GameInput_OnAttackAction;
         playerAnimator.OnFinishActing -= PlayerAnimator_OnFinishActing;
         playerAnimator.OnDeath -= PlayerAnimator_OnDeath;
+    }
+
+    private void OnTriggerEnter2D(Collider2D other) {
+
+        // Handle Item Pickup
+        other.transform.TryGetComponent<PickableObject>(out PickableObject pickedObject);
+        if (pickedObject != null) {
+            PickupItem(pickedObject);
+        }
     }
 
     private void GameInput_OnPushAction(object sender, EventArgs e) {
@@ -170,16 +182,30 @@ public class Player : MonoBehaviour, IDamageable {
         return pickableWeapons;
     }
 
-    public void ItemPickup(PickableSO pickedObject) {
+    public void PickupItem(PickableObject pickedObject) {
         // Check if picked object is a weapon
         foreach (PickableSO pickableWeapon in pickableWeapons.pickableSOList) {
-            if (pickedObject == pickableWeapon) {
+            if (pickedObject.GetPickableSO() == pickableWeapon) {
                 attackCountDictionary[pickableWeapon]++;
                 OnWeaponPickup?.Invoke(this, new OnWeaponPickupEventArgs{
-                    pickedWeapon = pickedObject,
+                    pickedWeapon = pickableWeapon,
                     weaponCount = attackCountDictionary[pickableWeapon]
                 });
-                break;
+                Destroy(pickedObject.gameObject);
+                return;
+            }
+        }
+
+        foreach (PickableSO pickableHealingItem in pickableHealingItems.pickableSOList) {
+            if (pickedObject.GetPickableSO() == pickableHealingItem) {
+                if (health < maxHealth) {
+                    health += 1;
+                    OnHealthChange?.Invoke(this, new IDamageable.OnHealthChangeEventArgs { healthNormalized = health / maxHealth });
+                    Destroy(pickedObject.gameObject);
+                    return;
+                } else {
+                    return;
+                }
             }
         }
     }
