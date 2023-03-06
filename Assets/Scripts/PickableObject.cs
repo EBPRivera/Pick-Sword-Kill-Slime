@@ -6,11 +6,16 @@ public class PickableObject : MonoBehaviour {
 
     [SerializeField] PickableSO pickableSO;
 
+    private bool successfulPickup = false;
+
     private void OnTriggerEnter2D(Collider2D other) {
         other.gameObject.TryGetComponent<Player>(out Player player);
         if (player != null && GameManager.Instance.IsPlayable()) {
-            player.ItemPickup(pickableSO);
-            Destroy(gameObject);
+            successfulPickup = player.ItemPickup(pickableSO);
+
+            if (successfulPickup) {
+                Destroy(gameObject);
+            }
         }
     }
 

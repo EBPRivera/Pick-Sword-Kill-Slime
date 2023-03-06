@@ -1558,12 +1558,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aaa2fea7c81fe4e48916467cf639c88a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  entityListSO: {fileID: 11400000, guid: 44f18a2818bd6e249bc4bbf3925477ac, type: 2}
   width: 16
   height: 6
-  enemyCountMax: 5
+  countMax: 5
   spawnTimerMax: 4
   gizmoColor: {r: 1, g: 0.6286203, b: 0.0990566, a: 1}
+  entityListSO: {fileID: 11400000, guid: 44f18a2818bd6e249bc4bbf3925477ac, type: 2}
 --- !u!1 &1204319417
 GameObject:
   m_ObjectHideFlags: 0

@@ -12,7 +12,10 @@ public class Player : MonoBehaviour, IDamageable {
     [SerializeField] private PlayerAnimator playerAnimator;
     [SerializeField] private GameInput gameInput;
     [SerializeField] private LayerMask objectLayerMask;
+
+    [Header("Pickable Objects")]
     [SerializeField] private PickableListSO pickableWeapons;
+    [SerializeField] private PickableListSO pickableHealingItems;
 
     private float health;
     private float maxHealth;
@@ -170,7 +173,7 @@ public class Player : MonoBehaviour, IDamageable {
         return pickableWeapons;
     }
 
-    public void ItemPickup(PickableSO pickedObject) {
+    public bool ItemPickup(PickableSO pickedObject) {
         // Check if picked object is a weapon
         foreach (PickableSO pickableWeapon in pickableWeapons.pickableSOList) {
             if (pickedObject == pickableWeapon) {
@@ -179,8 +182,22 @@ public class Player : MonoBehaviour, IDamageable {
                     pickedWeapon = pickedObject,
                     weaponCount = attackCountDictionary[pickableWeapon]
                 });
-                break;
+                return true;
             }
         }
+
+        foreach (PickableSO pickableHealingItem in pickableHealingItems.pickableSOList) {
+            if (pickedObject == pickableHealingItem) {
+                if (health < maxHealth) {
+                    health += 1;
+                    OnHealthChange?.Invoke(this, new IDamageable.OnHealthChangeEventArgs { healthNormalized = health / maxHealth });
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+
+        return false;
     }
 }
