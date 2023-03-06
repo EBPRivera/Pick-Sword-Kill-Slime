@@ -333,12 +333,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a190b39dc88ceba488966cc1d6b330d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pickableListSO: {fileID: 11400000, guid: 7e2eb4d2d73bdad4db8acb2ad667c80b, type: 2}
   width: 16
   height: 6
-  objectCountMax: 4
+  countMax: 5
   spawnTimerMax: 3
   gizmoColor: {r: 0, g: 0.8357128, b: 0.8490566, a: 1}
+  pickableListSO: {fileID: 11400000, guid: 7e2eb4d2d73bdad4db8acb2ad667c80b, type: 2}
 --- !u!1 &447370343
 GameObject:
   m_ObjectHideFlags: 0
