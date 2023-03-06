@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62155e27a6401fc4897de51366e874cb, type: 3}
+  m_Name: Potion
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 5988456413104542719, guid: c175ca0c0fd0451418b10ecdf0b8bd3d, type: 3}
+  sprite: {fileID: 744900913, guid: 21f6ee5da833e2f42b0a716eb8facb04, type: 3}
+  pickableObjectName: Potion
