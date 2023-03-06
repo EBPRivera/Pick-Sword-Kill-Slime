@@ -95,6 +95,15 @@ public class Player : MonoBehaviour, IDamageable {
         playerAnimator.OnDeath -= PlayerAnimator_OnDeath;
     }
 
+    private void OnTriggerEnter2D(Collider2D other) {
+
+        // Handle Item Pickup
+        other.transform.TryGetComponent<PickableObject>(out PickableObject pickedObject);
+        if (pickedObject != null) {
+            PickupItem(pickedObject);
+        }
+    }
+
     private void GameInput_OnPushAction(object sender, EventArgs e) {
         if (canAct) {
             canAct = false;
@@ -173,31 +182,31 @@ public class Player : MonoBehaviour, IDamageable {
         return pickableWeapons;
     }
 
-    public bool ItemPickup(PickableSO pickedObject) {
+    public void PickupItem(PickableObject pickedObject) {
         // Check if picked object is a weapon
         foreach (PickableSO pickableWeapon in pickableWeapons.pickableSOList) {
-            if (pickedObject == pickableWeapon) {
+            if (pickedObject.GetPickableSO() == pickableWeapon) {
                 attackCountDictionary[pickableWeapon]++;
                 OnWeaponPickup?.Invoke(this, new OnWeaponPickupEventArgs{
-                    pickedWeapon = pickedObject,
+                    pickedWeapon = pickableWeapon,
                     weaponCount = attackCountDictionary[pickableWeapon]
                 });
-                return true;
+                Destroy(pickedObject.gameObject);
+                return;
             }
         }
 
         foreach (PickableSO pickableHealingItem in pickableHealingItems.pickableSOList) {
-            if (pickedObject == pickableHealingItem) {
+            if (pickedObject.GetPickableSO() == pickableHealingItem) {
                 if (health < maxHealth) {
                     health += 1;
                     OnHealthChange?.Invoke(this, new IDamageable.OnHealthChangeEventArgs { healthNormalized = health / maxHealth });
-                    return true;
+                    Destroy(pickedObject.gameObject);
+                    return;
                 } else {
-                    return false;
+                    return;
                 }
             }
         }
-
-        return false;
     }
 }
