@@ -6,6 +6,8 @@ using UnityEngine;
 public class EnemyAnimator : MonoBehaviour
 {
     private const string IS_MOVING = "IsMoving";
+    private const string DEATH = "Death";
+    private const string DAMAGED = "Damaged";
 
     [SerializeField] private Enemy enemy;
     private SpriteRenderer sprite;
@@ -20,9 +22,9 @@ public class EnemyAnimator : MonoBehaviour
     }
 
     private void Start() {
-        enemy.OnHit += Enemy_OnHit;
+        enemy.OnDeath += Enemy_OnDeath;
+        enemy.OnDamaged += Enemy_OnDamaged;
     }
-
 
     private void FixedUpdate() {
         sprite.flipX = enemy.FacingDirection.x < 0;
@@ -30,12 +32,16 @@ public class EnemyAnimator : MonoBehaviour
     }
 
     private void OnDestroy() {
-        enemy.OnHit -= Enemy_OnHit;
+        enemy.OnDeath -= Enemy_OnDeath;
+        enemy.OnDamaged -= Enemy_OnDamaged;
     }
 
-    private void Enemy_OnHit(object sender, Enemy.OnHitEventArgs e) {
-        animator.SetTrigger(e.trigger);
+    private void Enemy_OnDamaged(object sender, EventArgs e) {
+        animator.SetTrigger(DAMAGED);
+    }
 
+    private void Enemy_OnDeath(object sender, EventArgs e) {
+        animator.SetTrigger(DEATH);
     }
 
     private void OnDeathKeyframeEvent() {

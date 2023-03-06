@@ -4,9 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour, IDamageable {
-    private const string DEATH = "Death";
-    private const string DAMAGED = "Damaged";
-
+    
     [SerializeField] private EntitySO entitySO;
     [SerializeField] private Detector detector;
     [SerializeField] private EnemyAnimator enemyAnimator;
@@ -19,10 +17,8 @@ public class Enemy : MonoBehaviour, IDamageable {
     private Rigidbody2D rigidBody;
     private Collider2D enemyCollider;
 
-    public event EventHandler<OnHitEventArgs> OnHit;
-    public class OnHitEventArgs : EventArgs {
-        public string trigger;
-    }
+    public event EventHandler OnDeath;
+    public event EventHandler OnDamaged;
 
     private void Awake() {
         health = entitySO.health;
@@ -74,10 +70,10 @@ public class Enemy : MonoBehaviour, IDamageable {
 
             if (health <= 0) {
                 canMove = false;
-                OnHit?.Invoke(this, new OnHitEventArgs {trigger = DEATH});
+                OnDeath?.Invoke(this, EventArgs.Empty);
             } else {
                 StartCoroutine(TemporaryDisableMovement());
-                OnHit?.Invoke(this, new OnHitEventArgs {trigger = DAMAGED});
+                OnDamaged?.Invoke(this, EventArgs.Empty);
             }
         }
     }

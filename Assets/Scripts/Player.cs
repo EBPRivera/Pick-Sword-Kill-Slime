@@ -4,12 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Player : MonoBehaviour, IDamageable
-{
-    private const string PUSH = "Push";
-    private const string ATTACK = "Attack";
-    private const string DEATH = "Death";
-
+public class Player : MonoBehaviour, IDamageable {
+    
     public static Player Instance;
 
     [SerializeField] private EntitySO entitySO;

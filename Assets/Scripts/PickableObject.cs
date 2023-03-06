@@ -8,7 +8,7 @@ public class PickableObject : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D other) {
         other.gameObject.TryGetComponent<Player>(out Player player);
-        if (player != null) {
+        if (player != null && GameManager.Instance.IsPlayable()) {
             player.ItemPickup(pickableSO);
             Destroy(gameObject);
         }
