@@ -12,6 +12,7 @@ public class Enemy : MonoBehaviour, IDamageable {
     public bool IsMoving { get; private set; }
     public Vector2 FacingDirection { get; private set; }
     private float health;
+    private float maxHealth;
     private bool isInvulnerable;
     private bool canMove = true;
     private Rigidbody2D rigidBody;
@@ -19,9 +20,11 @@ public class Enemy : MonoBehaviour, IDamageable {
 
     public event EventHandler OnDeath;
     public event EventHandler OnDamaged;
+    public event EventHandler<IDamageable.OnHealthChangeEventArgs> OnHealthChange;
 
     private void Awake() {
         health = entitySO.health;
+        maxHealth = entitySO.health;
         rigidBody = GetComponent<Rigidbody2D>();
         enemyCollider = GetComponent<Collider2D>();
     }
@@ -65,6 +68,7 @@ public class Enemy : MonoBehaviour, IDamageable {
     public void TakeDamage(float damage, Vector2 knockback) {
         if (!isInvulnerable) {
             health -= damage;
+            OnHealthChange?.Invoke(this, new IDamageable.OnHealthChangeEventArgs { healthNormalized = health / maxHealth });
             isInvulnerable = true;
             rigidBody.AddForce(knockback, ForceMode2D.Impulse);
 
