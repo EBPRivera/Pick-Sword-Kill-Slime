@@ -1,62 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &7799837619851299020
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 4637834972552232640}
-    m_Modifications:
-    - target: {fileID: 1978806798903026930, guid: 7374f919ee60dbf4cb92c1465a80ad7d, type: 3}
-      propertyPath: m_Name
-      value: SwordVisuals
-      objectReference: {fileID: 0}
-    - target: {fileID: 6069349325175347285, guid: 7374f919ee60dbf4cb92c1465a80ad7d, type: 3}
-      propertyPath: m_RootOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6069349325175347285, guid: 7374f919ee60dbf4cb92c1465a80ad7d, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6069349325175347285, guid: 7374f919ee60dbf4cb92c1465a80ad7d, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6069349325175347285, guid: 7374f919ee60dbf4cb92c1465a80ad7d, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6069349325175347285, guid: 7374f919ee60dbf4cb92c1465a80ad7d, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6069349325175347285, guid: 7374f919ee60dbf4cb92c1465a80ad7d, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6069349325175347285, guid: 7374f919ee60dbf4cb92c1465a80ad7d, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6069349325175347285, guid: 7374f919ee60dbf4cb92c1465a80ad7d, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6069349325175347285, guid: 7374f919ee60dbf4cb92c1465a80ad7d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6069349325175347285, guid: 7374f919ee60dbf4cb92c1465a80ad7d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6069349325175347285, guid: 7374f919ee60dbf4cb92c1465a80ad7d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 7374f919ee60dbf4cb92c1465a80ad7d, type: 3}
 --- !u!1001 &8097491917399438611
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -68,6 +11,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Sword
       objectReference: {fileID: 0}
+    - target: {fileID: 1297986408877362288, guid: 051cbceb01b66af43bde05e768007975, type: 3}
+      propertyPath: m_Name
+      value: SwordVisuals
+      objectReference: {fileID: 0}
     - target: {fileID: 3475925325394430931, guid: 051cbceb01b66af43bde05e768007975, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -112,14 +59,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6299239392743420793, guid: 051cbceb01b66af43bde05e768007975, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6804288039363904127, guid: 051cbceb01b66af43bde05e768007975, type: 3}
       propertyPath: pickableSO
       value: 
       objectReference: {fileID: 11400000, guid: 6becdf6dc03367e468dfdf697a193bd2, type: 2}
+    - target: {fileID: 6875803721196358815, guid: 051cbceb01b66af43bde05e768007975, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 857881979, guid: 21f6ee5da833e2f42b0a716eb8facb04, type: 3}
+    - target: {fileID: 6875803721196358815, guid: 051cbceb01b66af43bde05e768007975, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 051cbceb01b66af43bde05e768007975, type: 3}
---- !u!4 &4637834972552232640 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3475925325394430931, guid: 051cbceb01b66af43bde05e768007975, type: 3}
-  m_PrefabInstance: {fileID: 8097491917399438611}
-  m_PrefabAsset: {fileID: 0}
