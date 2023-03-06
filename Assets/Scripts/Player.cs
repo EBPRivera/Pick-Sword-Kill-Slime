@@ -15,6 +15,7 @@ public class Player : MonoBehaviour, IDamageable {
     [SerializeField] private PickableListSO pickableWeapons;
 
     private float health;
+    private float maxHealth;
     private bool isInvulnerable;
     private bool canAct = true;
     private float pushDetectionDistance = 0.2f;
@@ -32,6 +33,8 @@ public class Player : MonoBehaviour, IDamageable {
     public event EventHandler<OnAttackActionEventArgs> OnAttackAction;
     public event EventHandler<OnInvulnerableToggleEventArgs> OnInvulnerableToggle;
     public event EventHandler<OnWeaponPickupEventArgs> OnWeaponPickup;
+    public event EventHandler<IDamageable.OnHealthChangeEventArgs> OnHealthChange;
+
     public class OnWeaponPickupEventArgs: EventArgs {
         public PickableSO pickedWeapon;
         public int weaponCount;
@@ -49,6 +52,7 @@ public class Player : MonoBehaviour, IDamageable {
         Instance = this;
 
         health = entitySO.health;
+        maxHealth = entitySO.health;
         isInvulnerable = false;
         rigidBody = GetComponent<Rigidbody2D>();
         FacingDirection = Vector2.right;
@@ -125,6 +129,7 @@ public class Player : MonoBehaviour, IDamageable {
         if (!isInvulnerable) {
             health -= damage;
             rigidBody.AddForce(knockback, ForceMode2D.Impulse);
+            OnHealthChange?.Invoke(this, new IDamageable.OnHealthChangeEventArgs{ healthNormalized = health / maxHealth });
 
             if (health <= 0) {
                 canAct = false;
