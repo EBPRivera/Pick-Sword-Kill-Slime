@@ -4,6 +4,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour, IDamageable {
+
+    public static event EventHandler OnAnyDeath;
+
+    public static void ResetStaticData() {
+        OnAnyDeath = null;
+    }
     
     [SerializeField] private EntitySO entitySO;
     [SerializeField] private Detector detector;
@@ -75,6 +81,7 @@ public class Enemy : MonoBehaviour, IDamageable {
             if (health <= 0) {
                 canMove = false;
                 OnDeath?.Invoke(this, EventArgs.Empty);
+                OnAnyDeath?.Invoke(this, EventArgs.Empty);
             } else {
                 StartCoroutine(TemporaryDisableMovement());
                 OnDamaged?.Invoke(this, EventArgs.Empty);

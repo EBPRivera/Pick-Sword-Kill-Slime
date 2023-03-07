@@ -14,11 +14,18 @@ public class GameManager : MonoBehaviour {
     public static GameManager Instance { get; private set; }
 
     private State state;
+    private float timer = 30f;
+    private int score = 0;
 
     public event EventHandler OnStateChanged;
     public event EventHandler OnPause;
     public event EventHandler OnUnpause;
     public event EventHandler OnGameOver;
+    public event EventHandler<OnScoreChangeEventArgs> OnScoreChange;
+
+    public class OnScoreChangeEventArgs: EventArgs {
+        public int score;
+    }
 
     private void Awake() {
         Instance = this;
@@ -28,11 +35,25 @@ public class GameManager : MonoBehaviour {
     private void Start() {
         GameInput.Instance.OnPauseToggle += GameInput_OnPauseToggle;
         Player.Instance.OnGameOver += Player_OnGameOver;
+        Enemy.OnAnyDeath += Enemy_OnAnyDeath;
+    }
+
+    private void Update() {
+        switch (state) {
+            case State.GamePlay:
+                timer -= Time.deltaTime;
+                break;
+            default:
+                break;
+        }
     }
 
     private void OnDestroy() {
         GameInput.Instance.OnPauseToggle -= GameInput_OnPauseToggle;
         Player.Instance.OnGameOver -= Player_OnGameOver;
+        Enemy.OnAnyDeath -= Enemy_OnAnyDeath;
+
+        Enemy.ResetStaticData();
     }
 
     private void GameInput_OnPauseToggle(object sender, EventArgs e) {
@@ -43,6 +64,11 @@ public class GameManager : MonoBehaviour {
         state = State.GameOver;
         OnStateChanged?.Invoke(this, EventArgs.Empty);
         OnGameOver?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void Enemy_OnAnyDeath(object sender, EventArgs e) {
+        score++;
+        OnScoreChange?.Invoke(this, new GameManager.OnScoreChangeEventArgs { score = score });
     }
 
     public void TogglePause() {
