@@ -36,11 +36,14 @@ public class Enemy : MonoBehaviour, IDamageable {
     }
 
     private void Start() {
+        GameManager.Instance.OnGameOver += GameManager_OnGameOver;
         enemyAnimator.OnVulnerableTrigger += EnemyAnimator_OnVulnerabletrigger;
         enemyAnimator.OnDeath += EnemyAnimator_OnDeath;
     }
 
     private void FixedUpdate() {
+        if (!GameManager.Instance.IsPlayable()) return;
+
         if (detector.Detected && canMove) {
             Vector2 direction = (Vector2) (detector.DetectedEntity.position - transform.position).normalized;
             rigidBody.velocity = rigidBody.velocity + (direction * entitySO.movementSpeed * Time.fixedDeltaTime);
@@ -52,6 +55,7 @@ public class Enemy : MonoBehaviour, IDamageable {
     }
 
     private void OnDestroy() {
+        GameManager.Instance.OnGameOver -= GameManager_OnGameOver;
         enemyAnimator.OnVulnerableTrigger -= EnemyAnimator_OnVulnerabletrigger;
         enemyAnimator.OnDeath -= EnemyAnimator_OnDeath;
     }
@@ -61,6 +65,11 @@ public class Enemy : MonoBehaviour, IDamageable {
             other.transform.TryGetComponent<Player>(out Player player);
             player?.TakeDamage(entitySO.damage, (Vector2) (other.transform.position - transform.position).normalized * entitySO.knockbackForce);
         }
+    }
+
+    private void GameManager_OnGameOver(object sender, EventArgs e) {
+        IsMoving = false;
+        canMove = false;
     }
 
     private void EnemyAnimator_OnVulnerabletrigger(object sender, EventArgs e) {
