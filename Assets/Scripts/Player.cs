@@ -70,6 +70,7 @@ public class Player : MonoBehaviour, IDamageable {
     }
 
     private void Start() {
+        GameManager.Instance.OnGameOver += GameManager_OnGameOver;
         gameInput.OnPushAction += GameInput_OnPushAction;
         gameInput.OnAttackAction += GameInput_OnAttackAction;
         playerAnimator.OnFinishActing += PlayerAnimator_OnFinishActing;
@@ -77,6 +78,8 @@ public class Player : MonoBehaviour, IDamageable {
     }
 
     private void FixedUpdate() {
+        if (!GameManager.Instance.IsPlayable()) return;
+
         Vector2 inputDirection = gameInput.GetMovementVectorNormalized();
 
         if (inputDirection != Vector2.zero && canAct) {
@@ -89,6 +92,7 @@ public class Player : MonoBehaviour, IDamageable {
     }
 
     private void OnDestroy() {
+        GameManager.Instance.OnGameOver -= GameManager_OnGameOver;
         gameInput.OnPushAction -= GameInput_OnPushAction;
         gameInput.OnAttackAction -= GameInput_OnAttackAction;
         playerAnimator.OnFinishActing -= PlayerAnimator_OnFinishActing;
@@ -102,6 +106,12 @@ public class Player : MonoBehaviour, IDamageable {
         if (pickedObject != null) {
             PickupItem(pickedObject);
         }
+    }
+
+    private void GameManager_OnGameOver(object sender, EventArgs e) {
+        IsWalking = false;
+        canAct = false;
+        isInvulnerable = true;
     }
 
     private void GameInput_OnPushAction(object sender, EventArgs e) {
