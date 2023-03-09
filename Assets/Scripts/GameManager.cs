@@ -90,6 +90,10 @@ public class GameManager : MonoBehaviour {
     private void TriggerGameOver() {
         state = State.GameOver;
         OnGameOver?.Invoke(this, EventArgs.Empty);
+
+        if (score > HighScoreManager.GetHighScore()) {
+            HighScoreManager.SetHighScore(score);
+        }
     }
 
     public void TogglePause() {
