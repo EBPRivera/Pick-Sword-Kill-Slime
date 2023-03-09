@@ -81,7 +81,9 @@ public class GameManager : MonoBehaviour {
     }
 
     private void Enemy_OnAnyDeath(object sender, EventArgs e) {
+        timer += 3f;
         score++;
+        OnTimeChange?.Invoke(this, new OnTimeChangeEventArgs { time = timer });
         OnScoreChange?.Invoke(this, new OnScoreChangeEventArgs { score = score });
     }
 
