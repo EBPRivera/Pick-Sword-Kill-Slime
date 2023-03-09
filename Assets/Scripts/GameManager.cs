@@ -113,4 +113,8 @@ public class GameManager : MonoBehaviour {
     public bool IsGameOver() {
         return state == State.GameOver;
     }
+
+    public int GetScore() {
+        return score;
+    }
 }

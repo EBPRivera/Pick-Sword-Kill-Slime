@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class GameOverUI : MonoBehaviour {
     
+    [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private Button mainMenuButton;
 
     private void Awake() {
@@ -25,6 +27,7 @@ public class GameOverUI : MonoBehaviour {
     }
 
     private void GameManager_OnGameOver(object sender, EventArgs e) {
+        scoreText.text = "Your Score: " + GameManager.Instance.GetScore().ToString();
         gameObject.SetActive(true);
     }
 }
