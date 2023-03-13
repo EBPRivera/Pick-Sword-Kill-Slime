@@ -21,7 +21,6 @@ public class Player : MonoBehaviour, IDamageable {
     private float maxHealth;
     private bool isInvulnerable;
     private bool canAct = true;
-    private float pushDetectionDistance = 0.2f;
     private float invulnerableTimer = 1f;
     private PickableSO currentAttackAction;
     private Dictionary<PickableSO, int> attackCountDictionary = new Dictionary<PickableSO, int>();
@@ -30,7 +29,6 @@ public class Player : MonoBehaviour, IDamageable {
     public Vector2 FacingDirection { get; private set; }
     public bool IsWalking { get; private set; }
 
-    public event EventHandler OnPushAction;
     public event EventHandler OnDamaged;
     public event EventHandler OnDeath;
     public event EventHandler OnGameOver;
@@ -73,7 +71,6 @@ public class Player : MonoBehaviour, IDamageable {
 
     private void Start() {
         GameManager.Instance.OnGameOver += GameManager_OnGameOver;
-        gameInput.OnPushAction += GameInput_OnPushAction;
         gameInput.OnAttackAction += GameInput_OnAttackAction;
         playerAnimator.OnFinishActing += PlayerAnimator_OnFinishActing;
         playerAnimator.OnDeath += PlayerAnimator_OnDeath;
@@ -95,7 +92,6 @@ public class Player : MonoBehaviour, IDamageable {
 
     private void OnDestroy() {
         GameManager.Instance.OnGameOver -= GameManager_OnGameOver;
-        gameInput.OnPushAction -= GameInput_OnPushAction;
         gameInput.OnAttackAction -= GameInput_OnAttackAction;
         playerAnimator.OnFinishActing -= PlayerAnimator_OnFinishActing;
         playerAnimator.OnDeath -= PlayerAnimator_OnDeath;
@@ -114,20 +110,6 @@ public class Player : MonoBehaviour, IDamageable {
         IsWalking = false;
         canAct = false;
         isInvulnerable = true;
-    }
-
-    private void GameInput_OnPushAction(object sender, EventArgs e) {
-        if (canAct) {
-            canAct = false;
-            OnPushAction?.Invoke(this, EventArgs.Empty);
-            Vector2 startPosition = playerCollider.ClosestPoint((Vector2) gameObject.transform.position + FacingDirection);
-            RaycastHit2D raycastHit = Physics2D.Raycast(startPosition, FacingDirection, pushDetectionDistance, objectLayerMask);
-            
-            if (raycastHit) {
-                raycastHit.transform.gameObject.TryGetComponent<IPushable>(out IPushable pushableObject);
-                pushableObject?.Push(gameObject.transform.position);
-            }
-        }
     }
 
     private void GameInput_OnAttackAction(object sender, EventArgs e) {

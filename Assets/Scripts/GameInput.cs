@@ -7,7 +7,6 @@ using UnityEngine.InputSystem;
 public class GameInput : MonoBehaviour {
     public static GameInput Instance { get; private set; }
 
-    public event EventHandler OnPushAction;
     public event EventHandler OnAttackAction;
     public event EventHandler OnPauseToggle;
 
@@ -19,13 +18,11 @@ public class GameInput : MonoBehaviour {
         playerInputActions = new PlayerInputActions();
         playerInputActions.Player.Enable();
 
-        playerInputActions.Player.Push.performed += Push_performed;
         playerInputActions.Player.Attack.performed += Attack_performed;
         playerInputActions.Player.Pause.performed += Pause_performed;
     }
 
     private void OnDestroy() {
-        playerInputActions.Player.Push.performed -= Push_performed;
         playerInputActions.Player.Attack.performed -= Attack_performed;
         playerInputActions.Player.Pause.performed -= Pause_performed;
 
@@ -37,12 +34,6 @@ public class GameInput : MonoBehaviour {
         inputDirection.Normalize();
 
         return inputDirection;
-    }
-
-    private void Push_performed(InputAction.CallbackContext obj) {
-        if (!GameManager.Instance.IsPlayable()) return;
-
-        OnPushAction?.Invoke(this, EventArgs.Empty);
     }
 
     private void Attack_performed(InputAction.CallbackContext obj){

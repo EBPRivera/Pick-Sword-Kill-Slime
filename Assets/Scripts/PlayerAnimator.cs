@@ -9,7 +9,6 @@ public class PlayerAnimator : MonoBehaviour
     private const string HORIZONTAL_DIRECTION = "HorizontalDirection";
     private const string VERTICAL_DIRECTION = "VerticalDirection";
     private const string ATTACK = "Attack";
-    private const string PUSH = "Push";
     private const string DEATH = "Death";
 
     [SerializeField] private Player player;
@@ -30,7 +29,6 @@ public class PlayerAnimator : MonoBehaviour
     private void Start() {
         player.OnInvulnerableToggle += Player_OnInvulnerableToggle;
         player.OnAttackAction += Player_OnAttackAction;
-        player.OnPushAction += Player_OnPushAction;
         player.OnDeath += Player_OnDeath;
     }
 
@@ -55,7 +53,6 @@ public class PlayerAnimator : MonoBehaviour
     private void OnDestroy() {
         player.OnInvulnerableToggle -= Player_OnInvulnerableToggle;
         player.OnAttackAction -= Player_OnAttackAction;
-        player.OnPushAction -= Player_OnPushAction;
         player.OnDeath -= Player_OnDeath;
     }
 
@@ -68,10 +65,6 @@ public class PlayerAnimator : MonoBehaviour
         } else {
             isBlinking = false;
         }
-    }
-
-    private void Player_OnPushAction(object sender, EventArgs e) {
-        animator.SetTrigger(PUSH);
     }
 
     private void Player_OnAttackAction(object sender, EventArgs e) {

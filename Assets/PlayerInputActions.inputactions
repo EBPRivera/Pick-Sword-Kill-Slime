@@ -24,15 +24,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Push",
-                    "type": "Button",
-                    "id": "37ad9d01-3920-4c65-9c81-be6efbcb7de7",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "Pause",
                     "type": "Button",
                     "id": "0950ca55-1ef8-4ea5-98ef-36f6b7d40964",
@@ -227,17 +218,6 @@
                     "processors": "",
                     "groups": "XR",
                     "action": "Attack",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "d2c43147-d255-48f4-8bc3-40892bacc11d",
-                    "path": "<Keyboard>/k",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Push",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
