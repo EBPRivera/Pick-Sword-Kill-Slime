@@ -63,8 +63,6 @@ public class GameManager : MonoBehaviour {
         GameInput.Instance.OnPauseToggle -= GameInput_OnPauseToggle;
         Player.Instance.OnDeath -= Player_OnDeath;
         Player.Instance.OnGameOver -= Player_OnGameOver;
-        Enemy.OnAnyDeath -= Enemy_OnAnyDeath;
-
         Enemy.ResetStaticData();
     }
 
