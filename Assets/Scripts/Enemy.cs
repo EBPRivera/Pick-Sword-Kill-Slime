@@ -6,9 +6,11 @@ using UnityEngine;
 public class Enemy : MonoBehaviour, IDamageable {
 
     public static event EventHandler OnAnyDeath;
+    public static event EventHandler OnAnyDamaged;
 
     public static void ResetStaticData() {
         OnAnyDeath = null;
+        OnAnyDamaged = null;
     }
     
     [SerializeField] private EntitySO entitySO;
@@ -94,6 +96,7 @@ public class Enemy : MonoBehaviour, IDamageable {
             } else {
                 StartCoroutine(TemporaryDisableMovement());
                 OnDamaged?.Invoke(this, EventArgs.Empty);
+                OnAnyDamaged?.Invoke(this, EventArgs.Empty);
             }
         }
     }

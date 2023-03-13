@@ -31,11 +31,13 @@ public class Player : MonoBehaviour, IDamageable {
     public bool IsWalking { get; private set; }
 
     public event EventHandler OnPushAction;
+    public event EventHandler OnDamaged;
     public event EventHandler OnDeath;
     public event EventHandler OnGameOver;
     public event EventHandler<OnAttackActionEventArgs> OnAttackAction;
     public event EventHandler<OnInvulnerableToggleEventArgs> OnInvulnerableToggle;
     public event EventHandler<OnWeaponPickupEventArgs> OnWeaponPickup;
+    public event EventHandler OnHealthPickup;
     public event EventHandler<IDamageable.OnHealthChangeEventArgs> OnHealthChange;
 
     public class OnWeaponPickupEventArgs: EventArgs {
@@ -158,6 +160,7 @@ public class Player : MonoBehaviour, IDamageable {
                 isInvulnerable = true;
                 OnDeath?.Invoke(this, EventArgs.Empty);
             } else {
+                OnDamaged?.Invoke(this, EventArgs.Empty);
                 StartCoroutine(InvulnerableStateCo());
                 StartCoroutine(TemporaryActionDisableCo());
             }
@@ -211,6 +214,7 @@ public class Player : MonoBehaviour, IDamageable {
                 if (health < maxHealth) {
                     health += 1;
                     OnHealthChange?.Invoke(this, new IDamageable.OnHealthChangeEventArgs { healthNormalized = health / maxHealth });
+                    OnHealthPickup?.Invoke(this, EventArgs.Empty);
                     Destroy(pickedObject.gameObject);
                     return;
                 } else {
