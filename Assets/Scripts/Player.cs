@@ -66,7 +66,6 @@ public class Player : MonoBehaviour, IDamageable {
     }
 
     private void Start() {
-        GameManager.Instance.OnGameOver += GameManager_OnGameOver;
         gameInput.OnAttackAction += GameInput_OnAttackAction;
         playerAnimator.OnFinishActing += PlayerAnimator_OnFinishActing;
         playerAnimator.OnDeath += PlayerAnimator_OnDeath;
@@ -87,7 +86,6 @@ public class Player : MonoBehaviour, IDamageable {
     }
 
     private void OnDestroy() {
-        GameManager.Instance.OnGameOver -= GameManager_OnGameOver;
         gameInput.OnAttackAction -= GameInput_OnAttackAction;
         playerAnimator.OnFinishActing -= PlayerAnimator_OnFinishActing;
         playerAnimator.OnDeath -= PlayerAnimator_OnDeath;
@@ -99,12 +97,6 @@ public class Player : MonoBehaviour, IDamageable {
         if (pickedObject != null) {
             PickupItem(pickedObject);
         }
-    }
-
-    private void GameManager_OnGameOver(object sender, EventArgs e) {
-        IsWalking = false;
-        canAct = false;
-        isInvulnerable = true;
     }
 
     private void GameInput_OnAttackAction(object sender, EventArgs e) {
@@ -123,6 +115,10 @@ public class Player : MonoBehaviour, IDamageable {
     }
 
     private void PlayerAnimator_OnDeath(object sender, EventArgs e) {
+        IsWalking = false;
+        canAct = false;
+        isInvulnerable = true;
+
         OnGameOver?.Invoke(this, EventArgs.Empty);
     }
 
@@ -193,10 +189,8 @@ public class Player : MonoBehaviour, IDamageable {
                     OnHealthChange?.Invoke(this, new IDamageable.OnHealthChangeEventArgs { healthNormalized = health / maxHealth });
                     OnHealthPickup?.Invoke(this, EventArgs.Empty);
                     Destroy(pickedObject.gameObject);
-                    return;
-                } else {
-                    return;
                 }
+                return;
             }
         }
     }
