@@ -3,8 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerAnimator : MonoBehaviour
-{
+public class PlayerAnimator : MonoBehaviour {
     private const string IS_WALKING = "IsWalking";
     private const string HORIZONTAL_DIRECTION = "HorizontalDirection";
     private const string VERTICAL_DIRECTION = "VerticalDirection";
@@ -57,9 +56,9 @@ public class PlayerAnimator : MonoBehaviour
     }
 
     private void Player_OnInvulnerableToggle(object sender, Player.OnInvulnerableToggleEventArgs e) {
-        if (e.isInvulnerable) {
-            if (e.health <= 0) return;
+        if (!player.IsAlive()) return;
 
+        if (e.isInvulnerable) {
             isBlinking = true;
             StartCoroutine(BlinkingCo());
         } else {

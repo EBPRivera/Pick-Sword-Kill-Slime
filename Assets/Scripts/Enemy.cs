@@ -26,8 +26,8 @@ public class Enemy : MonoBehaviour, IDamageable {
     private Rigidbody2D rigidBody;
     private Collider2D enemyCollider;
 
-    public event EventHandler OnDeath;
     public event EventHandler OnDamaged;
+    public event EventHandler OnDeath;
     public event EventHandler<IDamageable.OnHealthChangeEventArgs> OnHealthChange;
 
     private void Awake() {
@@ -101,6 +101,10 @@ public class Enemy : MonoBehaviour, IDamageable {
         }
     }
 
+    public bool IsAlive() {
+        return health > 0;
+    }
+
     private IEnumerator TemporaryDisableMovement() {
         canMove = false;
         yield return new WaitForSeconds(0.1f);
@@ -129,5 +133,4 @@ public class Enemy : MonoBehaviour, IDamageable {
             return null;
         }
     }
-
 }
