@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,11 +9,15 @@ public class Detector : MonoBehaviour {
     [Header("Parent")]
     [SerializeField] private Transform entity;
 
-    public bool Detected { get; private set; }
-    public Transform DetectedEntity { get; private set; }
+    private bool detected;
+
+    public event EventHandler<OnPlayerDetectedEventArgs> OnPlayerDetected;
+    public class OnPlayerDetectedEventArgs : EventArgs {
+        public Transform followTarget;
+    }
 
     private void Awake() {
-        Detected = false;
+        detected = false;
     }
 
     private void FixedUpdate() {
@@ -21,7 +26,7 @@ public class Detector : MonoBehaviour {
         if (targetCollider != null) {
             targetCollider.transform.TryGetComponent<Player>(out Player player);
 
-            if (!IsObstacle(targetCollider.transform) && player != null && player.IsAlive()) {
+            if (!HasObstacle(targetCollider.transform) && player != null && player.IsAlive()) {
                 SetDetected(targetCollider.transform);
             } else {
                 SetDetected();
@@ -31,17 +36,27 @@ public class Detector : MonoBehaviour {
         }
     }
 
-    private bool IsObstacle(Transform target) {
+    private bool HasObstacle(Transform target) {
         float distanceFromTarget = Vector2.Distance(transform.position, target.position);
         Vector2 directionToTarget = (Vector2) (target.position - transform.position).normalized;
 
-        RaycastHit2D raycastHit = Physics2D.Raycast(transform.position, directionToTarget, distanceFromTarget);
+        int collisionCount = Physics2D.Raycast(
+            transform.position,
+            directionToTarget,
+            new ContactFilter2D { useTriggers = false },
+            new List<RaycastHit2D>(),
+            distanceFromTarget
+        );
 
-        return raycastHit.transform != target;
+        return collisionCount > 1;
     }
 
     private void SetDetected(Transform target = null) {
-        DetectedEntity = target;
-        Detected = target != null;
+        if (!detected && target != null || detected && target == null) {
+            detected = !detected;
+            OnPlayerDetected?.Invoke(this, new OnPlayerDetectedEventArgs {
+                followTarget = target
+            });
+        }
     }
 }

@@ -25,6 +25,7 @@ public class Enemy : MonoBehaviour, IDamageable {
     private bool canMove = true;
     private Rigidbody2D rigidBody;
     private Collider2D enemyCollider;
+    private Transform followTarget;
 
     public event EventHandler OnDamaged;
     public event EventHandler OnDeath;
@@ -41,13 +42,14 @@ public class Enemy : MonoBehaviour, IDamageable {
         GameManager.Instance.OnGameOver += GameManager_OnGameOver;
         enemyAnimator.OnVulnerableTrigger += EnemyAnimator_OnVulnerabletrigger;
         enemyAnimator.OnDeath += EnemyAnimator_OnDeath;
+        detector.OnPlayerDetected += Detector_OnPlayerDetected;
     }
 
     private void FixedUpdate() {
         if (!GameManager.Instance.IsPlayable()) return;
 
-        if (detector.Detected && canMove) {
-            Vector2 direction = (Vector2) (detector.DetectedEntity.position - transform.position).normalized;
+        if (followTarget != null && canMove) {
+            Vector2 direction = (Vector2) (followTarget.position - transform.position).normalized;
             rigidBody.velocity = rigidBody.velocity + (direction * entitySO.movementSpeed * Time.fixedDeltaTime);
             IsMoving = true;
             FacingDirection = direction;
@@ -60,6 +62,7 @@ public class Enemy : MonoBehaviour, IDamageable {
         GameManager.Instance.OnGameOver -= GameManager_OnGameOver;
         enemyAnimator.OnVulnerableTrigger -= EnemyAnimator_OnVulnerabletrigger;
         enemyAnimator.OnDeath -= EnemyAnimator_OnDeath;
+        detector.OnPlayerDetected -= Detector_OnPlayerDetected;
     }
 
     private void OnCollisionStay2D(Collision2D other) {
@@ -80,6 +83,10 @@ public class Enemy : MonoBehaviour, IDamageable {
 
     private void EnemyAnimator_OnDeath(object sender, EventArgs e) {
         Destroy(gameObject);
+    }
+
+    private void Detector_OnPlayerDetected(object sender, Detector.OnPlayerDetectedEventArgs e) {
+        followTarget = e.followTarget;
     }
 
     public void TakeDamage(float damage, Vector2 knockback) {
