@@ -122,8 +122,12 @@ public class Enemy : MonoBehaviour, IDamageable {
         float colliderSizeMagnitude = enemy.GetColliderSize().magnitude;
         float spawnRadius = colliderSizeMagnitude + colliderSizeMagnitude * 0.01f;
 
-        List<Collider2D> colliderList = new List<Collider2D>();
-        int overlapCount = Physics2D.OverlapCircle(position, spawnRadius, new ContactFilter2D { useTriggers = false }, colliderList);
+        int overlapCount = Physics2D.OverlapCircle(
+            position,
+            spawnRadius,
+            new ContactFilter2D { useTriggers = false },
+            new List<Collider2D>()
+        );
 
         if (overlapCount == 0) {
             enemyTransform.position = position;
