@@ -8,7 +8,7 @@ public class GameInput : MonoBehaviour {
     public static GameInput Instance { get; private set; }
 
     public event EventHandler OnAttackAction;
-    public event EventHandler OnPauseToggle;
+    // public event EventHandler OnPauseToggle;
 
     private PlayerInputActions playerInputActions;
 
@@ -43,6 +43,6 @@ public class GameInput : MonoBehaviour {
     }
 
     private void Pause_performed(InputAction.CallbackContext obj) {
-        OnPauseToggle?.Invoke(this, EventArgs.Empty);
+        GameManager.Instance.TogglePause();
     }
 }
