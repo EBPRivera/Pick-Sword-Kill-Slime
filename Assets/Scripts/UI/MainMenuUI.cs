@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -6,13 +7,20 @@ using UnityEngine.UI;
 
 public class MainMenuUI : MonoBehaviour {
 
+    [SerializeField] private HowToPlayUI howToPlayUI;
     [SerializeField] private TextMeshProUGUI highScoreText;
     [SerializeField] private Button playButton;
+    [SerializeField] private Button howToPlayButton;
     [SerializeField] private Button quitButton;
 
     private void Awake() {
         playButton.onClick.AddListener(() => {
             Loader.LoadScene(Loader.Scene.GameScene);
+        });
+
+        howToPlayButton.onClick.AddListener(() => {
+            Hide();
+            howToPlayUI.Show();
         });
 
         quitButton.onClick.AddListener(() => {
@@ -25,5 +33,13 @@ public class MainMenuUI : MonoBehaviour {
         }
 
         Time.timeScale = 1f;
+    }
+
+    public void Show() {
+        gameObject.SetActive(true);
+    }
+
+    public void Hide() {
+        gameObject.SetActive(false);
     }
 }
