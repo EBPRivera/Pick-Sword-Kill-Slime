@@ -38,7 +38,6 @@ public class GameManager : MonoBehaviour {
     }
 
     private void Start() {
-        GameInput.Instance.OnPauseToggle += GameInput_OnPauseToggle;
         Player.Instance.OnDeath += Player_OnDeath;
         Player.Instance.OnGameOver += Player_OnGameOver;
         Enemy.OnAnyDeath += Enemy_OnAnyDeath;
@@ -60,14 +59,9 @@ public class GameManager : MonoBehaviour {
     }
 
     private void OnDestroy() {
-        GameInput.Instance.OnPauseToggle -= GameInput_OnPauseToggle;
         Player.Instance.OnDeath -= Player_OnDeath;
         Player.Instance.OnGameOver -= Player_OnGameOver;
         Enemy.ResetStaticData();
-    }
-
-    private void GameInput_OnPauseToggle(object sender, EventArgs e) {
-        TogglePause();
     }
 
     private void Player_OnDeath(object sender, EventArgs e) {

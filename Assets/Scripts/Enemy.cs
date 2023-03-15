@@ -25,9 +25,10 @@ public class Enemy : MonoBehaviour, IDamageable {
     private bool canMove = true;
     private Rigidbody2D rigidBody;
     private Collider2D enemyCollider;
+    private Transform followTarget;
 
-    public event EventHandler OnDeath;
     public event EventHandler OnDamaged;
+    public event EventHandler OnDeath;
     public event EventHandler<IDamageable.OnHealthChangeEventArgs> OnHealthChange;
 
     private void Awake() {
@@ -41,13 +42,14 @@ public class Enemy : MonoBehaviour, IDamageable {
         GameManager.Instance.OnGameOver += GameManager_OnGameOver;
         enemyAnimator.OnVulnerableTrigger += EnemyAnimator_OnVulnerabletrigger;
         enemyAnimator.OnDeath += EnemyAnimator_OnDeath;
+        detector.OnPlayerDetected += Detector_OnPlayerDetected;
     }
 
     private void FixedUpdate() {
         if (!GameManager.Instance.IsPlayable()) return;
 
-        if (detector.Detected && canMove) {
-            Vector2 direction = (Vector2) (detector.DetectedEntity.position - transform.position).normalized;
+        if (followTarget != null && canMove) {
+            Vector2 direction = (Vector2) (followTarget.position - transform.position).normalized;
             rigidBody.velocity = rigidBody.velocity + (direction * entitySO.movementSpeed * Time.fixedDeltaTime);
             IsMoving = true;
             FacingDirection = direction;
@@ -60,6 +62,7 @@ public class Enemy : MonoBehaviour, IDamageable {
         GameManager.Instance.OnGameOver -= GameManager_OnGameOver;
         enemyAnimator.OnVulnerableTrigger -= EnemyAnimator_OnVulnerabletrigger;
         enemyAnimator.OnDeath -= EnemyAnimator_OnDeath;
+        detector.OnPlayerDetected -= Detector_OnPlayerDetected;
     }
 
     private void OnCollisionStay2D(Collision2D other) {
@@ -82,6 +85,10 @@ public class Enemy : MonoBehaviour, IDamageable {
         Destroy(gameObject);
     }
 
+    private void Detector_OnPlayerDetected(object sender, Detector.OnPlayerDetectedEventArgs e) {
+        followTarget = e.followTarget;
+    }
+
     public void TakeDamage(float damage, Vector2 knockback) {
         if (!isInvulnerable) {
             health -= damage;
@@ -101,6 +108,10 @@ public class Enemy : MonoBehaviour, IDamageable {
         }
     }
 
+    public bool IsAlive() {
+        return health > 0;
+    }
+
     private IEnumerator TemporaryDisableMovement() {
         canMove = false;
         yield return new WaitForSeconds(0.1f);
@@ -118,8 +129,12 @@ public class Enemy : MonoBehaviour, IDamageable {
         float colliderSizeMagnitude = enemy.GetColliderSize().magnitude;
         float spawnRadius = colliderSizeMagnitude + colliderSizeMagnitude * 0.01f;
 
-        List<Collider2D> colliderList = new List<Collider2D>();
-        int overlapCount = Physics2D.OverlapCircle(position, spawnRadius, new ContactFilter2D { useTriggers = false }, colliderList);
+        int overlapCount = Physics2D.OverlapCircle(
+            position,
+            spawnRadius,
+            new ContactFilter2D { useTriggers = false },
+            new List<Collider2D>()
+        );
 
         if (overlapCount == 0) {
             enemyTransform.position = position;
@@ -129,5 +144,4 @@ public class Enemy : MonoBehaviour, IDamageable {
             return null;
         }
     }
-
 }

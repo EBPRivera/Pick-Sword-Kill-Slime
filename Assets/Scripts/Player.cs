@@ -11,7 +11,6 @@ public class Player : MonoBehaviour, IDamageable {
     [SerializeField] private EntitySO entitySO;
     [SerializeField] private PlayerAnimator playerAnimator;
     [SerializeField] private GameInput gameInput;
-    [SerializeField] private LayerMask objectLayerMask;
 
     [Header("Pickable Objects")]
     [SerializeField] private PickableListSO pickableWeapons;
@@ -21,16 +20,13 @@ public class Player : MonoBehaviour, IDamageable {
     private float maxHealth;
     private bool isInvulnerable;
     private bool canAct = true;
-    private float pushDetectionDistance = 0.2f;
     private float invulnerableTimer = 1f;
     private PickableSO currentAttackAction;
     private Dictionary<PickableSO, int> attackCountDictionary = new Dictionary<PickableSO, int>();
     private Rigidbody2D rigidBody;
-    private Collider2D playerCollider;
     public Vector2 FacingDirection { get; private set; }
     public bool IsWalking { get; private set; }
 
-    public event EventHandler OnPushAction;
     public event EventHandler OnDamaged;
     public event EventHandler OnDeath;
     public event EventHandler OnGameOver;
@@ -46,7 +42,6 @@ public class Player : MonoBehaviour, IDamageable {
     }
     public class OnInvulnerableToggleEventArgs : EventArgs {
         public bool isInvulnerable;
-        public float health;
     }
     public class OnAttackActionEventArgs: EventArgs {
         public PickableSO weapon;
@@ -61,7 +56,6 @@ public class Player : MonoBehaviour, IDamageable {
         isInvulnerable = false;
         rigidBody = GetComponent<Rigidbody2D>();
         FacingDirection = Vector2.right;
-        playerCollider = GetComponent<Collider2D>();
 
         foreach (PickableSO pickableWeapon in pickableWeapons.pickableSOList) {
             attackCountDictionary.Add(pickableWeapon, 0);
@@ -72,8 +66,6 @@ public class Player : MonoBehaviour, IDamageable {
     }
 
     private void Start() {
-        GameManager.Instance.OnGameOver += GameManager_OnGameOver;
-        gameInput.OnPushAction += GameInput_OnPushAction;
         gameInput.OnAttackAction += GameInput_OnAttackAction;
         playerAnimator.OnFinishActing += PlayerAnimator_OnFinishActing;
         playerAnimator.OnDeath += PlayerAnimator_OnDeath;
@@ -94,39 +86,16 @@ public class Player : MonoBehaviour, IDamageable {
     }
 
     private void OnDestroy() {
-        GameManager.Instance.OnGameOver -= GameManager_OnGameOver;
-        gameInput.OnPushAction -= GameInput_OnPushAction;
         gameInput.OnAttackAction -= GameInput_OnAttackAction;
         playerAnimator.OnFinishActing -= PlayerAnimator_OnFinishActing;
         playerAnimator.OnDeath -= PlayerAnimator_OnDeath;
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
-
         // Handle Item Pickup
         other.transform.TryGetComponent<PickableObject>(out PickableObject pickedObject);
         if (pickedObject != null) {
             PickupItem(pickedObject);
-        }
-    }
-
-    private void GameManager_OnGameOver(object sender, EventArgs e) {
-        IsWalking = false;
-        canAct = false;
-        isInvulnerable = true;
-    }
-
-    private void GameInput_OnPushAction(object sender, EventArgs e) {
-        if (canAct) {
-            canAct = false;
-            OnPushAction?.Invoke(this, EventArgs.Empty);
-            Vector2 startPosition = playerCollider.ClosestPoint((Vector2) gameObject.transform.position + FacingDirection);
-            RaycastHit2D raycastHit = Physics2D.Raycast(startPosition, FacingDirection, pushDetectionDistance, objectLayerMask);
-            
-            if (raycastHit) {
-                raycastHit.transform.gameObject.TryGetComponent<IPushable>(out IPushable pushableObject);
-                pushableObject?.Push(gameObject.transform.position);
-            }
         }
     }
 
@@ -146,6 +115,10 @@ public class Player : MonoBehaviour, IDamageable {
     }
 
     private void PlayerAnimator_OnDeath(object sender, EventArgs e) {
+        IsWalking = false;
+        canAct = false;
+        isInvulnerable = true;
+
         OnGameOver?.Invoke(this, EventArgs.Empty);
     }
 
@@ -170,10 +143,10 @@ public class Player : MonoBehaviour, IDamageable {
     private IEnumerator InvulnerableStateCo() {
         if (invulnerableTimer > 0) {
             isInvulnerable = true;
-            OnInvulnerableToggle?.Invoke(this, new OnInvulnerableToggleEventArgs{ isInvulnerable = true, health = health });
+            OnInvulnerableToggle?.Invoke(this, new OnInvulnerableToggleEventArgs{ isInvulnerable = true });
             yield return new WaitForSeconds(invulnerableTimer);
             isInvulnerable = false;
-            OnInvulnerableToggle?.Invoke(this, new OnInvulnerableToggleEventArgs{ isInvulnerable = false, health = health });
+            OnInvulnerableToggle?.Invoke(this, new OnInvulnerableToggleEventArgs{ isInvulnerable = false });
         }
     }
 
@@ -212,14 +185,12 @@ public class Player : MonoBehaviour, IDamageable {
         foreach (PickableSO pickableHealingItem in pickableHealingItems.pickableSOList) {
             if (pickedObject.GetPickableSO() == pickableHealingItem) {
                 if (health < maxHealth) {
-                    health += 1;
+                    health = Mathf.Min(health + 1, maxHealth);
                     OnHealthChange?.Invoke(this, new IDamageable.OnHealthChangeEventArgs { healthNormalized = health / maxHealth });
                     OnHealthPickup?.Invoke(this, EventArgs.Empty);
                     Destroy(pickedObject.gameObject);
-                    return;
-                } else {
-                    return;
                 }
+                return;
             }
         }
     }

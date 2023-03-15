@@ -12,7 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 151e122adb2159f4a8c0b13e7fc28723, type: 3}
   m_Name: SFXClips
   m_EditorClassIdentifier: 
+  playerHurt:
+  - {fileID: 8300000, guid: 2d25f08a9ca0c624bb0483a20336540e, type: 3}
   swordSwings:
-  - {fileID: 8300000, guid: 223a3e456c934dd4ba8a5652848a7171, type: 3}
-  - {fileID: 8300000, guid: fa8b590b778f32f4ca070c8950b4e3fc, type: 3}
-  - {fileID: 8300000, guid: 9b8336610a193d44a848673e2ca9fb66, type: 3}
+  - {fileID: 8300000, guid: bdb6ae2bafa1a5d4890bbc5b51cf2af6, type: 3}
+  - {fileID: 8300000, guid: b06d63c85dc5f164eafda3ad39986a57, type: 3}
+  - {fileID: 8300000, guid: 195fb1217ac9c714a80a18685c99116d, type: 3}
+  - {fileID: 8300000, guid: dd547f30981e13c4db64b0716bbb2ed7, type: 3}
+  enemyHurt:
+  - {fileID: 8300000, guid: 986be2c0b486da540a0268a45b8cc6ac, type: 3}
+  enemyDeath:
+  - {fileID: 8300000, guid: a13584f0721feaa4d8597de94925087d, type: 3}
+  weaponPickup:
+  - {fileID: 8300000, guid: 6edc575f11215cb4caef0d84aec34e30, type: 3}
+  healthPickup:
+  - {fileID: 8300000, guid: a84f04377da3b164f95e72b97edd275c, type: 3}

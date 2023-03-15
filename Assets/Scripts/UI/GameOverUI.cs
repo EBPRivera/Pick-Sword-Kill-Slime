@@ -9,11 +9,16 @@ public class GameOverUI : MonoBehaviour {
     
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI highScoreText;
+    [SerializeField] private Button retryButton;
     [SerializeField] private Button mainMenuButton;
 
     private void Awake() {
         mainMenuButton.onClick.AddListener(() => {
             Loader.LoadScene(Loader.Scene.MainMenuScene);
+        });
+
+        retryButton.onClick.AddListener(() => {
+            Loader.LoadScene(Loader.Scene.GameScene);
         });
     }
 
