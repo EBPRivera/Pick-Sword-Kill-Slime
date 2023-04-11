@@ -1,5 +1,5 @@
 # Pick Sword, Kill Slime
-#### Video Demo: https://youtu.be/nfee1Nzn3MU
+#### Video Demo: https://youtu.be/0_nPXwFM_EU
 
 ## Summary
 You control a character in a rectangular arena where slimes, swords, and healing items regularly spawn. Your goal is to gain as much points as possible by defeating as many slimes that you can. The game ends once you run out of time or you are defeated by the slimes. Additionally, you gain 3 seconds more to your remaining time for each slime that you defeat.
@@ -7,8 +7,6 @@ You control a character in a rectangular arena where slimes, swords, and healing
 Note, however, that you are unable to attack unless you have picked up a sword. Attacking consumes the sword, so you must pick up a new one in order to attack again. There is no limit to how many swords you can carry.
 
 You are also able to pick up health items that spawn to increase your health once you get damaged.
-
-*Note that this game has also been submitted as GD50's final project requirement*
 
 ## Scenes and Scene Management
 The game has two scenes, the Main Menu Scene, where the player is able to learn how to play the game, and the Game Scene, where the bulk of the game happens. Transitions between scenes is handled by a Loader static class, which uses the public Scene enum to identify the scenes in the project. Should errors relating to scene transitions occur, debugging becomes easier as the location at which they may happen is isolated.
